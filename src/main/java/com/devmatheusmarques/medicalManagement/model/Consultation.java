@@ -16,7 +16,7 @@ public class Consultation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column(nullable = false)
-    String name;
+    private String name;
     @ManyToOne
     @JoinColumn(name = "patient_id", nullable = false, foreignKey = @ForeignKey(name = "FK_consultation_patient"))
     private Patient patient;
