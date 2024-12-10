@@ -1,4 +1,7 @@
 package com.devmatheusmarques.medicalManagement.repository;
 
-public interface PatientRepository {
+import com.devmatheusmarques.medicalManagement.model.Patient;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface PatientRepository extends JpaRepository<Patient, Long> {
 }
