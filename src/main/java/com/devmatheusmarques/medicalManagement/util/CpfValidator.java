@@ -25,9 +25,11 @@ public class CpfValidator {
             return false;
         }
 
-        int[] weights = {10, 9, 8, 7, 6, 5, 4, 3, 2};
-        int firstDigit = calculateDigit(cpf.substring(0, 9), weights);
-        int secondDigit = calculateDigit(cpf.substring(0, 9) + firstDigit, weights);
+        int[] weightsFirst = {10, 9, 8, 7, 6, 5, 4, 3, 2};
+        int firstDigit = calculateDigit(cpf.substring(0, 9), weightsFirst);
+
+        int[] weightsSecond = {11, 10, 9, 8, 7, 6, 5, 4, 3, 2};
+        int secondDigit = calculateDigit(cpf.substring(0, 9) + firstDigit, weightsSecond);
 
         return cpf.equals(cpf.substring(0, 9) + firstDigit + secondDigit);
     }
