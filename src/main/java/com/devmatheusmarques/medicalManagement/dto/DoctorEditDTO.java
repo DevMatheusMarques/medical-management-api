@@ -1,18 +1,16 @@
 package com.devmatheusmarques.medicalManagement.dto;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import java.util.Objects;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonSerialize
-public class DoctorResponseDTO {
+public class DoctorEditDTO {
 
     private Long id;
     private String name;
-    private String crm;
     private String specialty;
     private String email;
     private String telephone;
@@ -31,14 +29,6 @@ public class DoctorResponseDTO {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getCrm() {
-        return crm;
-    }
-
-    public void setCrm(String crm) {
-        this.crm = crm;
     }
 
     public String getSpecialty() {
@@ -68,21 +58,20 @@ public class DoctorResponseDTO {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        DoctorResponseDTO that = (DoctorResponseDTO) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(crm, that.crm) && Objects.equals(specialty, that.specialty) && Objects.equals(email, that.email) && Objects.equals(telephone, that.telephone);
+        DoctorEditDTO that = (DoctorEditDTO) o;
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(specialty, that.specialty) && Objects.equals(email, that.email) && Objects.equals(telephone, that.telephone);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, crm, specialty, email, telephone);
+        return Objects.hash(id, name, specialty, email, telephone);
     }
 
     @Override
     public String toString() {
-        return "DoctorResponseDTO{" +
+        return "DoctorEditDTO{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", crm='" + crm + '\'' +
                 ", specialty='" + specialty + '\'' +
                 ", email='" + email + '\'' +
                 ", telephone='" + telephone + '\'' +
