@@ -3,45 +3,66 @@ package com.devmatheusmarques.medicalManagement.dto;
 import com.devmatheusmarques.medicalManagement.model.Doctor;
 import com.devmatheusmarques.medicalManagement.model.Patient;
 import com.devmatheusmarques.medicalManagement.util.ConsultationStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
 
+import java.time.LocalTime;
 import java.util.Date;
-import java.util.Objects;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonSerialize
 public class ConsultationResponseDTO {
 
-    private Patient patient;
-    private Doctor doctor;
-    private Date dateTime;
+    private Long id;
+    private String patient;
+    private String doctor;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+    private Date date;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
+    private LocalTime time;
     private ConsultationStatus status;
     private String observations;
 
-    public Patient getPatient() {
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getPatient() {
         return patient;
     }
 
-    public void setPatient(Patient patient) {
+    public void setPatient(String patient) {
         this.patient = patient;
     }
 
-    public Doctor getDoctor() {
+    public String getDoctor() {
         return doctor;
     }
 
-    public void setDoctor(Doctor doctor) {
+    public void setDoctor(String doctor) {
         this.doctor = doctor;
     }
 
-    public Date getDateTime() {
-        return dateTime;
+    public Date getDate() {
+        return date;
     }
 
-    public void setDateTime(Date dateTime) {
-        this.dateTime = dateTime;
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public LocalTime getTime() {
+        return time;
+    }
+
+    public void setTime(LocalTime time) {
+        this.time = time;
     }
 
     public ConsultationStatus getStatus() {
@@ -58,28 +79,5 @@ public class ConsultationResponseDTO {
 
     public void setObservations(String observations) {
         this.observations = observations;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        ConsultationResponseDTO that = (ConsultationResponseDTO) o;
-        return Objects.equals(patient, that.patient) && Objects.equals(doctor, that.doctor) && Objects.equals(dateTime, that.dateTime) && status == that.status && Objects.equals(observations, that.observations);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(patient, doctor, dateTime, status, observations);
-    }
-
-    @Override
-    public String toString() {
-        return "ConsultationResponseDTO{" +
-                "patient=" + patient +
-                ", doctor=" + doctor +
-                ", dateTime=" + dateTime +
-                ", status=" + status +
-                ", observations='" + observations + '\'' +
-                '}';
     }
 }
