@@ -1,4 +1,11 @@
 package com.devmatheusmarques.medicalManagement.repository;
 
-public interface PatientRepository {
+import com.devmatheusmarques.medicalManagement.model.Patient;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
+
+public interface PatientRepository extends JpaRepository<Patient, Long> {
+    Optional<Patient> findByCpf(String cpf);
+    Patient findByName(String name);
 }

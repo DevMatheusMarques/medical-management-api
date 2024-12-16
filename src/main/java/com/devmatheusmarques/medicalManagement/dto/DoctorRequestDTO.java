@@ -1,24 +1,20 @@
-package com.devmatheusmarques.medicalManagement.model;
+package com.devmatheusmarques.medicalManagement.dto;
 
-import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Entity
+import java.util.Objects;
+
 @NoArgsConstructor
 @AllArgsConstructor
-public class Doctor {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class DoctorRequestDTO {
+
     private Long id;
-    @Column(name = "name", nullable = false)
     private String name;
-    @Column(name = "crm", unique = true, nullable = false)
     private String crm;
-    @Column(name = "specialty", nullable = false)
     private String specialty;
-    @Column(name = "email", unique = true, nullable = false)
     private String email;
-    @Column(name = "telephone", nullable = false)
     private String telephone;
 
     public Long getId() {
@@ -70,14 +66,14 @@ public class Doctor {
     }
 
     @Override
-    public String toString() {
-        return "Doctor{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", crm='" + crm + '\'' +
-                ", specialty='" + specialty + '\'' +
-                ", email='" + email + '\'' +
-                ", telephone='" + telephone + '\'' +
-                '}';
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        DoctorRequestDTO that = (DoctorRequestDTO) o;
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(crm, that.crm) && Objects.equals(specialty, that.specialty) && Objects.equals(email, that.email) && Objects.equals(telephone, that.telephone);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, crm, specialty, email, telephone);
     }
 }

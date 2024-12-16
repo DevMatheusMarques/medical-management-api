@@ -1,24 +1,20 @@
-package com.devmatheusmarques.medicalManagement.model;
+package com.devmatheusmarques.medicalManagement.dto;
 
-import jakarta.persistence.*;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
 
-@Entity
+import java.util.Objects;
+
 @NoArgsConstructor
 @AllArgsConstructor
-public class Doctor {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+@JsonSerialize
+public class DoctorResponseDTO {
+
     private Long id;
-    @Column(name = "name", nullable = false)
     private String name;
-    @Column(name = "crm", unique = true, nullable = false)
     private String crm;
-    @Column(name = "specialty", nullable = false)
     private String specialty;
-    @Column(name = "email", unique = true, nullable = false)
     private String email;
-    @Column(name = "telephone", nullable = false)
     private String telephone;
 
     public Long getId() {
@@ -70,8 +66,20 @@ public class Doctor {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        DoctorResponseDTO that = (DoctorResponseDTO) o;
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(crm, that.crm) && Objects.equals(specialty, that.specialty) && Objects.equals(email, that.email) && Objects.equals(telephone, that.telephone);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, crm, specialty, email, telephone);
+    }
+
+    @Override
     public String toString() {
-        return "Doctor{" +
+        return "DoctorResponseDTO{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", crm='" + crm + '\'' +

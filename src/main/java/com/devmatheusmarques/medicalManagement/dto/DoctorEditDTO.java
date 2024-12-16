@@ -1,24 +1,18 @@
-package com.devmatheusmarques.medicalManagement.model;
+package com.devmatheusmarques.medicalManagement.dto;
 
-import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
-@Entity
+import java.util.Objects;
+
 @NoArgsConstructor
 @AllArgsConstructor
-public class Doctor {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class DoctorEditDTO {
+
     private Long id;
-    @Column(name = "name", nullable = false)
     private String name;
-    @Column(name = "crm", unique = true, nullable = false)
-    private String crm;
-    @Column(name = "specialty", nullable = false)
     private String specialty;
-    @Column(name = "email", unique = true, nullable = false)
     private String email;
-    @Column(name = "telephone", nullable = false)
     private String telephone;
 
     public Long getId() {
@@ -35,14 +29,6 @@ public class Doctor {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getCrm() {
-        return crm;
-    }
-
-    public void setCrm(String crm) {
-        this.crm = crm;
     }
 
     public String getSpecialty() {
@@ -70,11 +56,22 @@ public class Doctor {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        DoctorEditDTO that = (DoctorEditDTO) o;
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(specialty, that.specialty) && Objects.equals(email, that.email) && Objects.equals(telephone, that.telephone);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, specialty, email, telephone);
+    }
+
+    @Override
     public String toString() {
-        return "Doctor{" +
+        return "DoctorEditDTO{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", crm='" + crm + '\'' +
                 ", specialty='" + specialty + '\'' +
                 ", email='" + email + '\'' +
                 ", telephone='" + telephone + '\'' +

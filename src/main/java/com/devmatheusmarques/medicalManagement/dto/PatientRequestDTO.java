@@ -1,31 +1,22 @@
-package com.devmatheusmarques.medicalManagement.model;
+package com.devmatheusmarques.medicalManagement.dto;
 
-import jakarta.persistence.*;
-import lombok.*;
-
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import java.util.Date;
 import java.util.Objects;
 
-@Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Patient {
+public class PatientRequestDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "name", nullable = false)
     private String name;
-    @Column(name = "cpf", unique = true, nullable = false)
     private String cpf;
-    @Temporal(TemporalType.DATE)
-    @Column(name = "birth_date", nullable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private Date birth_date;
-    @Column(name = "email", unique = true, nullable = false)
     private String email;
-    @Column(name = "telephone", nullable = false)
     private String telephone;
-    @Column(name = "address", nullable = false)
     private String address;
 
     public Long getId() {
@@ -87,25 +78,12 @@ public class Patient {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        Patient patient = (Patient) o;
-        return Objects.equals(id, patient.id) && Objects.equals(name, patient.name) && Objects.equals(cpf, patient.cpf) && Objects.equals(birth_date, patient.birth_date) && Objects.equals(email, patient.email) && Objects.equals(telephone, patient.telephone) && Objects.equals(address, patient.address);
+        PatientRequestDTO that = (PatientRequestDTO) o;
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(cpf, that.cpf) && Objects.equals(birth_date, that.birth_date) && Objects.equals(email, that.email) && Objects.equals(telephone, that.telephone) && Objects.equals(address, that.address);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(id, name, cpf, birth_date, email, telephone, address);
-    }
-
-    @Override
-    public String toString() {
-        return "Patient{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", cpf='" + cpf + '\'' +
-                ", birth_date=" + birth_date +
-                ", email='" + email + '\'' +
-                ", telephone='" + telephone + '\'' +
-                ", address='" + address + '\'' +
-                '}';
     }
 }
