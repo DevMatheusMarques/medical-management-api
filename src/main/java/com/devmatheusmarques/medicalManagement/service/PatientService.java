@@ -8,7 +8,6 @@ import com.devmatheusmarques.medicalManagement.repository.PatientRepository;
 import com.devmatheusmarques.medicalManagement.util.CpfValidator;
 import com.devmatheusmarques.medicalManagement.util.EmailValidator;
 import com.devmatheusmarques.medicalManagement.util.PhoneValidator;
-import lombok.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

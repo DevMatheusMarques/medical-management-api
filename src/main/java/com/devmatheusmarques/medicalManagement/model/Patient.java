@@ -6,9 +6,7 @@ import lombok.*;
 import java.util.Date;
 import java.util.Objects;
 
-@Entity
-@NoArgsConstructor
-@AllArgsConstructor
+@Entity(name = "patients")
 public class Patient {
 
     @Id
@@ -27,6 +25,19 @@ public class Patient {
     private String telephone;
     @Column(name = "address", nullable = false)
     private String address;
+
+    public Patient() {
+    }
+
+    public Patient(Long id, String name, String cpf, Date birth_date, String email, String telephone, String address) {
+        this.id = id;
+        this.name = name;
+        this.cpf = cpf;
+        this.birth_date = birth_date;
+        this.email = email;
+        this.telephone = telephone;
+        this.address = address;
+    }
 
     public Long getId() {
         return id;

@@ -8,9 +8,7 @@ import java.time.LocalTime;
 import java.util.Date;
 import java.util.Objects;
 
-@Entity
-@NoArgsConstructor
-@AllArgsConstructor
+@Entity(name = "consultations")
 public class Consultation {
 
     @Id
@@ -32,6 +30,19 @@ public class Consultation {
     private ConsultationStatus status;
     @Column(name = "observations")
     private String observations;
+
+    public Consultation() {
+    }
+
+    public Consultation(Long id, Patient patient, Doctor doctor, Date date, LocalTime time, ConsultationStatus status, String observations) {
+        this.id = id;
+        this.patient = patient;
+        this.doctor = doctor;
+        this.date = date;
+        this.time = time;
+        this.status = status;
+        this.observations = observations;
+    }
 
     public Long getId() {
         return id;

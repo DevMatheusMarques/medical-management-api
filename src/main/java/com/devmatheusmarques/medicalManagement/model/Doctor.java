@@ -3,9 +3,7 @@ package com.devmatheusmarques.medicalManagement.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Entity
-@NoArgsConstructor
-@AllArgsConstructor
+@Entity(name = "doctors")
 public class Doctor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,6 +18,18 @@ public class Doctor {
     private String email;
     @Column(name = "telephone", nullable = false)
     private String telephone;
+
+    public Doctor() {
+    }
+
+    public Doctor(Long id, String name, String crm, String specialty, String email, String telephone) {
+        this.id = id;
+        this.name = name;
+        this.crm = crm;
+        this.specialty = specialty;
+        this.email = email;
+        this.telephone = telephone;
+    }
 
     public Long getId() {
         return id;
