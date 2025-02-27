@@ -72,11 +72,9 @@ public class UserService {
             throw new IllegalArgumentException("Login inválido ou ausente.");
         }
 
-        UserDetails userDetails = userRepository.findByLogin(login);
-        if (userDetails == null) {
-            throw new NoSuchElementException("Usuário não encontrado");
-        }
+        var user = userRepository.findByLogin(login)
+                .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado"));
 
-        return modelMapper.map(userDetails, UserResponseDTO.class);
+        return modelMapper.map(user, UserResponseDTO.class);
     }
 }

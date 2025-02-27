@@ -1,5 +1,6 @@
 package com.devmatheusmarques.medicalManagement.dto;
 
+import com.devmatheusmarques.medicalManagement.util.Status;
 import com.devmatheusmarques.medicalManagement.util.UserRole;
 
 import java.util.Objects;
@@ -7,13 +8,15 @@ import java.util.Objects;
 public class UserResponseDTO {
     private String username;
     private UserRole role;
+    private Status status;
 
     public UserResponseDTO() {
     }
 
-    public UserResponseDTO(String username, UserRole role) {
+    public UserResponseDTO(String username, UserRole role, Status status) {
         this.username = username;
         this.role = role;
+        this.status = status;
     }
 
     public String getUsername() {
@@ -32,16 +35,24 @@ public class UserResponseDTO {
         this.role = role;
     }
 
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         UserResponseDTO that = (UserResponseDTO) o;
-        return Objects.equals(username, that.username) && role == that.role;
+        return Objects.equals(username, that.username) && role == that.role && status == that.status;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(username, role);
+        return Objects.hash(username, role, status);
     }
 
     @Override
@@ -49,6 +60,7 @@ public class UserResponseDTO {
         return "UserResponseDTO{" +
                 "username='" + username + '\'' +
                 ", role=" + role +
+                ", status=" + status +
                 '}';
     }
 }

@@ -1,5 +1,7 @@
 package com.devmatheusmarques.medicalManagement.model;
 
+import com.devmatheusmarques.medicalManagement.util.Status;
+import com.devmatheusmarques.medicalManagement.util.StatusConverter;
 import com.devmatheusmarques.medicalManagement.util.UserRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -26,11 +28,15 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private UserRole role;
+    @Convert(converter = StatusConverter.class)
+    @Column(name = "status", nullable = false)
+    private Status status;
 
-    public User(String login, String password, UserRole role) {
+    public User(String login, String password, UserRole role, Status status) {
         this.login = login;
         this.password = password;
         this.role = role;
+        this.status = status;
     }
 
     public User() {
@@ -62,6 +68,14 @@ public class User implements UserDetails {
 
     public void setRole(UserRole role) {
         this.role = role;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     @Override
