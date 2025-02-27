@@ -6,6 +6,7 @@ import com.devmatheusmarques.medicalManagement.dto.RegisterDTO;
 import com.devmatheusmarques.medicalManagement.model.User;
 import com.devmatheusmarques.medicalManagement.repository.UserRepository;
 import com.devmatheusmarques.medicalManagement.service.TokenService;
+import com.devmatheusmarques.medicalManagement.util.Status;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -42,10 +43,13 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody @Valid RegisterDTO data) {
-        if(userRepository.findByLogin(data.login()) != null) return ResponseEntity.badRequest().build();
+        if(userRepository.findByLogin(data.login()).isPresent()) return ResponseEntity.badRequest().build();
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
-        User newUser = new User(data.login(), encryptedPassword, data.role());
+
+        Status status = Status.fromString(data.status());
+
+        User newUser = new User(data.login(), encryptedPassword, data.role(), status);
 
         userRepository.save(newUser);
 

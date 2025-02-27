@@ -1,5 +1,6 @@
 package com.devmatheusmarques.medicalManagement.dto;
 
+import com.devmatheusmarques.medicalManagement.util.Status;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
@@ -20,6 +21,7 @@ public class PatientResponseDTO {
     private String email;
     private String telephone;
     private String address;
+    private Status status;
 
     public Long getId() {
         return id;
@@ -77,16 +79,24 @@ public class PatientResponseDTO {
         this.address = address;
     }
 
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         PatientResponseDTO that = (PatientResponseDTO) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(cpf, that.cpf) && Objects.equals(birth_date, that.birth_date) && Objects.equals(email, that.email) && Objects.equals(telephone, that.telephone) && Objects.equals(address, that.address);
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(cpf, that.cpf) && Objects.equals(birth_date, that.birth_date) && Objects.equals(email, that.email) && Objects.equals(telephone, that.telephone) && Objects.equals(address, that.address) && Objects.equals(status, that.status);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, cpf, birth_date, email, telephone, address);
+        return Objects.hash(id, name, cpf, birth_date, email, telephone, address, status);
     }
 
     @Override
@@ -99,6 +109,7 @@ public class PatientResponseDTO {
                 ", email='" + email + '\'' +
                 ", telephone='" + telephone + '\'' +
                 ", address='" + address + '\'' +
+                ", status='" + status + '\'' +
                 '}';
     }
 }

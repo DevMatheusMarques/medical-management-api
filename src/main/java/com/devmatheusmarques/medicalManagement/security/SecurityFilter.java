@@ -2,6 +2,7 @@ package com.devmatheusmarques.medicalManagement.security;
 
 import com.devmatheusmarques.medicalManagement.repository.UserRepository;
 import com.devmatheusmarques.medicalManagement.service.TokenService;
+import com.devmatheusmarques.medicalManagement.util.Status;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,7 +33,24 @@ public class SecurityFilter extends OncePerRequestFilter {
         var token = this.recoverToken(request);
         if(token != null) {
             var login = tokenService.validateToken(token);
-            UserDetails user = userRepository.findByLogin(login);
+            var userOptional = userRepository.findByLogin(login);
+
+            // 🚨 Verifica se o usuário foi encontrado
+            if (userOptional.isEmpty()) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("Usuário não encontrado");
+                return;
+            }
+
+            var user = userOptional.get();
+
+            // 🚨 Verifica se o usuário está inativo
+            if (user.getStatus() != Status.ACTIVE) {
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                response.getWriter().write("Acesso negado: usuário inativo");
+                return;
+            }
+
 
             var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);

@@ -25,6 +25,7 @@ public class TokenService {
             return JWT.create()
                     .withIssuer("medical-management")
                     .withSubject(user.getLogin())
+                    .withClaim("username", user.getUsername())
                     .withExpiresAt(genExpirationDate())
                     .sign(algorithm);
         } catch (JWTCreationException exception) {

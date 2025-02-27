@@ -1,5 +1,7 @@
 package com.devmatheusmarques.medicalManagement.model;
 
+import com.devmatheusmarques.medicalManagement.util.Status;
+import com.devmatheusmarques.medicalManagement.util.StatusConverter;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,11 +27,14 @@ public class Patient {
     private String telephone;
     @Column(name = "address", nullable = false)
     private String address;
+    @Convert(converter = StatusConverter.class)
+    @Column(name = "status", nullable = false)
+    private Status status;
 
     public Patient() {
     }
 
-    public Patient(Long id, String name, String cpf, Date birth_date, String email, String telephone, String address) {
+    public Patient(Long id, String name, String cpf, Date birth_date, String email, String telephone, String address, Status status) {
         this.id = id;
         this.name = name;
         this.cpf = cpf;
@@ -37,6 +42,7 @@ public class Patient {
         this.email = email;
         this.telephone = telephone;
         this.address = address;
+        this.status = status;
     }
 
     public Long getId() {
@@ -95,16 +101,24 @@ public class Patient {
         this.address = address;
     }
 
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Patient patient = (Patient) o;
-        return Objects.equals(id, patient.id) && Objects.equals(name, patient.name) && Objects.equals(cpf, patient.cpf) && Objects.equals(birth_date, patient.birth_date) && Objects.equals(email, patient.email) && Objects.equals(telephone, patient.telephone) && Objects.equals(address, patient.address);
+        return Objects.equals(id, patient.id) && Objects.equals(name, patient.name) && Objects.equals(cpf, patient.cpf) && Objects.equals(birth_date, patient.birth_date) && Objects.equals(email, patient.email) && Objects.equals(telephone, patient.telephone) && Objects.equals(address, patient.address) && Objects.equals(status, patient.status);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, cpf, birth_date, email, telephone, address);
+        return Objects.hash(id, name, cpf, birth_date, email, telephone, address, status);
     }
 
     @Override
@@ -117,6 +131,7 @@ public class Patient {
                 ", email='" + email + '\'' +
                 ", telephone='" + telephone + '\'' +
                 ", address='" + address + '\'' +
+                ", status='" + status + '\'' +
                 '}';
     }
 }
