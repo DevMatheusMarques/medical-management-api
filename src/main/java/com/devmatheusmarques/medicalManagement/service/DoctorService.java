@@ -39,6 +39,15 @@ public class DoctorService {
                 throw new IllegalArgumentException("Telefone inválido.");
             }
 
+            if (doctorRepository.findByCrm(doctor.getCrm()).isPresent()) {
+                throw new IllegalArgumentException("Já existe um médico cadastrado com este CRM.");
+            }
+
+            if (doctorRepository.findByEmail(doctor.getEmail()).isPresent()) {
+                throw new IllegalArgumentException("Já existe um médico cadastrado com este e-mail.");
+            }
+
+
             Doctor savedDoctor = doctorRepository.save(doctor);
             return modelMapper.map(savedDoctor, DoctorResponseDTO.class);
         } catch (Exception e) {

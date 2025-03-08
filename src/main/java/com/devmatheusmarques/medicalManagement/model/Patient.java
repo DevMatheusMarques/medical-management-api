@@ -3,7 +3,6 @@ package com.devmatheusmarques.medicalManagement.model;
 import com.devmatheusmarques.medicalManagement.util.Status;
 import com.devmatheusmarques.medicalManagement.util.StatusConverter;
 import jakarta.persistence.*;
-import lombok.*;
 
 import java.util.Date;
 import java.util.Objects;

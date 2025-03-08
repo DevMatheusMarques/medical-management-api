@@ -4,7 +4,7 @@ import java.util.regex.Pattern;
 
 public class CrmValidator {
 
-    private static final Pattern CRM_PATTERN = Pattern.compile("^\\d{6,8}-[A-Z]{2}$");
+    private static final Pattern CRM_PATTERN = Pattern.compile("^\\d{2,3}\\.\\d{3}-[A-Z]{2}$");
 
     /**
      * Valida se o CRM está no formato correto.
