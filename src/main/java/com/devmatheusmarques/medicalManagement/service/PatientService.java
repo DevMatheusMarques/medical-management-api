@@ -39,6 +39,14 @@ public class PatientService {
                 throw new IllegalArgumentException("Telefone inválido.");
             }
 
+            if (patientRepository.findByCpf(patient.getCpf()).isPresent()) {
+                throw new IllegalArgumentException("Já existe um paciente cadastrado com este CPF.");
+            }
+
+            if (patientRepository.findByEmail(patient.getEmail()).isPresent()) {
+                throw new IllegalArgumentException("Já existe um paciente cadastrado com este e-mail.");
+            }
+
             Patient savedPatient = patientRepository.save(patient);
             return modelMapper.map(savedPatient, PatientResponseDTO.class);
         } catch (Exception e) {
@@ -72,6 +80,10 @@ public class PatientService {
         }
         if (patientEditDTO.getAddress() != null) {
             existingPatient.setAddress(patientEditDTO.getAddress());
+        }
+
+        if (patientEditDTO.getStatus() != null) {
+            existingPatient.setStatus(patientEditDTO.getStatus());
         }
 
         patientRepository.save(existingPatient);
