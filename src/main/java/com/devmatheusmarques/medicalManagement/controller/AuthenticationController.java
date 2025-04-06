@@ -7,6 +7,7 @@ import com.devmatheusmarques.medicalManagement.model.User;
 import com.devmatheusmarques.medicalManagement.repository.UserRepository;
 import com.devmatheusmarques.medicalManagement.service.TokenService;
 import com.devmatheusmarques.medicalManagement.util.Status;
+import com.devmatheusmarques.medicalManagement.util.UserRole;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -47,9 +50,10 @@ public class AuthenticationController {
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
 
+        UserRole userRole = UserRole.fromString(data.role());
         Status status = Status.fromString(data.status());
 
-        User newUser = new User(data.login(), encryptedPassword, data.role(), status);
+        User newUser = new User(data.login(), encryptedPassword, userRole, status, LocalDateTime.now());
 
         userRepository.save(newUser);
 

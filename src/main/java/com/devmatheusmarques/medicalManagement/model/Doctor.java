@@ -3,6 +3,9 @@ package com.devmatheusmarques.medicalManagement.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+import java.util.Objects;
+
 @Entity(name = "doctors")
 public class Doctor {
     @Id
@@ -18,17 +21,20 @@ public class Doctor {
     private String email;
     @Column(name = "telephone", nullable = false)
     private String telephone;
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime created_at;
 
     public Doctor() {
     }
 
-    public Doctor(Long id, String name, String crm, String specialty, String email, String telephone) {
+    public Doctor(Long id, String name, String crm, String specialty, String email, String telephone, LocalDateTime created_at) {
         this.id = id;
         this.name = name;
         this.crm = crm;
         this.specialty = specialty;
         this.email = email;
         this.telephone = telephone;
+        this.created_at = created_at;
     }
 
     public Long getId() {
@@ -79,6 +85,26 @@ public class Doctor {
         this.telephone = telephone;
     }
 
+    public LocalDateTime getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(LocalDateTime created_at) {
+        this.created_at = created_at;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Doctor doctor = (Doctor) o;
+        return Objects.equals(id, doctor.id) && Objects.equals(name, doctor.name) && Objects.equals(crm, doctor.crm) && Objects.equals(specialty, doctor.specialty) && Objects.equals(email, doctor.email) && Objects.equals(telephone, doctor.telephone) && Objects.equals(created_at, doctor.created_at);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, crm, specialty, email, telephone, created_at);
+    }
+
     @Override
     public String toString() {
         return "Doctor{" +
@@ -88,6 +114,7 @@ public class Doctor {
                 ", specialty='" + specialty + '\'' +
                 ", email='" + email + '\'' +
                 ", telephone='" + telephone + '\'' +
+                ", created_at=" + created_at +
                 '}';
     }
 }

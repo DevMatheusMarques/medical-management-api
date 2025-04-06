@@ -5,6 +5,7 @@ import com.devmatheusmarques.medicalManagement.dto.UserResponseDTO;
 import com.devmatheusmarques.medicalManagement.model.User;
 import com.devmatheusmarques.medicalManagement.util.EmailValidator;
 import com.devmatheusmarques.medicalManagement.util.PhoneValidator;
+import com.devmatheusmarques.medicalManagement.util.UserRole;
 import org.modelmapper.ModelMapper;
 import com.devmatheusmarques.medicalManagement.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,11 @@ public class UserService {
             existingUser.setPassword(userEditDTO.getPassword());
         }
         if (userEditDTO.getRole() != null) {
-            existingUser.setRole(userEditDTO.getRole());
+            existingUser.setRole(UserRole.fromString(userEditDTO.getRole()));
+        }
+
+        if (userEditDTO.getStatus() != null) {
+            existingUser.setStatus(userEditDTO.getStatus());
         }
 
         userRepository.save(existingUser);

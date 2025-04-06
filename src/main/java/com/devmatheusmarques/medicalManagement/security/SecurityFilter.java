@@ -35,7 +35,6 @@ public class SecurityFilter extends OncePerRequestFilter {
             var login = tokenService.validateToken(token);
             var userOptional = userRepository.findByLogin(login);
 
-            // 🚨 Verifica se o usuário foi encontrado
             if (userOptional.isEmpty()) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.getWriter().write("Usuário não encontrado");
@@ -44,13 +43,11 @@ public class SecurityFilter extends OncePerRequestFilter {
 
             var user = userOptional.get();
 
-            // 🚨 Verifica se o usuário está inativo
             if (user.getStatus() != Status.ACTIVE) {
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                 response.getWriter().write("Acesso negado: usuário inativo");
                 return;
             }
-
 
             var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);

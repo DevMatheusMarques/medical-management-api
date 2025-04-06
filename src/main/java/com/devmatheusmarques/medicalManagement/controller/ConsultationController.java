@@ -1,6 +1,7 @@
 package com.devmatheusmarques.medicalManagement.controller;
 
 import com.devmatheusmarques.medicalManagement.dto.ConsultationRequestDTO;
+import com.devmatheusmarques.medicalManagement.dto.ConsultationEditDTO;
 import com.devmatheusmarques.medicalManagement.dto.ConsultationResponseDTO;
 import com.devmatheusmarques.medicalManagement.service.ConsultationService;
 import jakarta.validation.Valid;
@@ -27,8 +28,8 @@ public class ConsultationController {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> editConsultation(@PathVariable Long id, @Valid @RequestBody ConsultationRequestDTO consultationRequestDTO) {
-        consultationService.consultationEdit(id, consultationRequestDTO);
+    public ResponseEntity<Void> editConsultation(@PathVariable Long id, @Valid @RequestBody ConsultationEditDTO consultationEditDTO) {
+        consultationService.consultationEdit(id, consultationEditDTO);
         return ResponseEntity.noContent().build();
     }
 

@@ -12,6 +12,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,7 +22,7 @@ public class PatientService {
     @Autowired
     private PatientRepository patientRepository;
     @Autowired
-    private  ModelMapper modelMapper;
+    private ModelMapper modelMapper;
 
     public PatientResponseDTO patientRegister(PatientRequestDTO patientRequestDTO) {
         try {
@@ -47,6 +48,7 @@ public class PatientService {
                 throw new IllegalArgumentException("Já existe um paciente cadastrado com este e-mail.");
             }
 
+            patient.setCreated_at(LocalDateTime.now());
             Patient savedPatient = patientRepository.save(patient);
             return modelMapper.map(savedPatient, PatientResponseDTO.class);
         } catch (Exception e) {

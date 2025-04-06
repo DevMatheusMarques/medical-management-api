@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.devmatheusmarques.medicalManagement.model.User;
+import com.devmatheusmarques.medicalManagement.util.UserRole;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -21,11 +22,13 @@ public class TokenService {
     public String generateToken(User user) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
+            UserRole userRole = user.getRole();
 
             return JWT.create()
                     .withIssuer("medical-management")
                     .withSubject(user.getLogin())
                     .withClaim("username", user.getUsername())
+                    .withClaim("role", userRole.getRole())
                     .withExpiresAt(genExpirationDate())
                     .sign(algorithm);
         } catch (JWTCreationException exception) {

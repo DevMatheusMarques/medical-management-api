@@ -3,6 +3,7 @@ package com.devmatheusmarques.medicalManagement.dto;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @NoArgsConstructor
@@ -16,6 +17,7 @@ public class DoctorResponseDTO {
     private String specialty;
     private String email;
     private String telephone;
+    private LocalDateTime created_at;
 
     public Long getId() {
         return id;
@@ -65,27 +67,11 @@ public class DoctorResponseDTO {
         this.telephone = telephone;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        DoctorResponseDTO that = (DoctorResponseDTO) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(crm, that.crm) && Objects.equals(specialty, that.specialty) && Objects.equals(email, that.email) && Objects.equals(telephone, that.telephone);
+    public LocalDateTime getCreated_at() {
+        return created_at;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, crm, specialty, email, telephone);
-    }
-
-    @Override
-    public String toString() {
-        return "DoctorResponseDTO{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", crm='" + crm + '\'' +
-                ", specialty='" + specialty + '\'' +
-                ", email='" + email + '\'' +
-                ", telephone='" + telephone + '\'' +
-                '}';
+    public void setCreated_at(LocalDateTime created_at) {
+        this.created_at = created_at;
     }
 }
