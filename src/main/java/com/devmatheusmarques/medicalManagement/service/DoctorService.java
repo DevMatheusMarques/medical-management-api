@@ -12,6 +12,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,35 +25,33 @@ public class DoctorService {
     private ModelMapper modelMapper;
 
     public DoctorResponseDTO doctorRegister(DoctorRequestDTO doctorRequestDTO) {
-        try {
-            Doctor doctor = modelMapper.map(doctorRequestDTO, Doctor.class);
 
-            if (!CrmValidator.isValid(doctor.getCrm())) {
-                throw new IllegalArgumentException("CRM inválido.");
-            }
+        Doctor doctor = modelMapper.map(doctorRequestDTO, Doctor.class);
 
-            if (!EmailValidator.isValid(doctor.getEmail())) {
-                throw new IllegalArgumentException("Email inválido.");
-            }
-
-            if (!PhoneValidator.isValid(doctor.getTelephone())) {
-                throw new IllegalArgumentException("Telefone inválido.");
-            }
-
-            if (doctorRepository.findByCrm(doctor.getCrm()).isPresent()) {
-                throw new IllegalArgumentException("Já existe um médico cadastrado com este CRM.");
-            }
-
-            if (doctorRepository.findByEmail(doctor.getEmail()).isPresent()) {
-                throw new IllegalArgumentException("Já existe um médico cadastrado com este e-mail.");
-            }
-
-
-            Doctor savedDoctor = doctorRepository.save(doctor);
-            return modelMapper.map(savedDoctor, DoctorResponseDTO.class);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        if (!CrmValidator.isValid(doctor.getCrm())) {
+            throw new IllegalArgumentException("CRM inválido.");
         }
+
+        if (!EmailValidator.isValid(doctor.getEmail())) {
+            throw new IllegalArgumentException("Email inválido.");
+        }
+
+        if (!PhoneValidator.isValid(doctor.getTelephone())) {
+            throw new IllegalArgumentException("Telefone inválido.");
+        }
+
+        if (doctorRepository.findByCrm(doctor.getCrm()).isPresent()) {
+            throw new IllegalArgumentException("Já existe um médico cadastrado com este CRM.");
+        }
+
+        if (doctorRepository.findByEmail(doctor.getEmail()).isPresent()) {
+            throw new IllegalArgumentException("Já existe um médico cadastrado com este e-mail.");
+        }
+
+        doctor.setCreated_at(LocalDateTime.now());
+
+        Doctor savedDoctor = doctorRepository.save(doctor);
+        return modelMapper.map(savedDoctor, DoctorResponseDTO.class);
     }
 
     public void doctorEdit(Long id, DoctorEditDTO doctorEditDTO) {

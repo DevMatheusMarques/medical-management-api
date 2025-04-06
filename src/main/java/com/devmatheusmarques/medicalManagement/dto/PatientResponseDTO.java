@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Objects;
 
@@ -22,6 +23,7 @@ public class PatientResponseDTO {
     private String telephone;
     private String address;
     private Status status;
+    private LocalDateTime created_at;
 
     public Long getId() {
         return id;
@@ -87,29 +89,11 @@ public class PatientResponseDTO {
         this.status = status;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        PatientResponseDTO that = (PatientResponseDTO) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(cpf, that.cpf) && Objects.equals(birth_date, that.birth_date) && Objects.equals(email, that.email) && Objects.equals(telephone, that.telephone) && Objects.equals(address, that.address) && Objects.equals(status, that.status);
+    public LocalDateTime getCreated_at() {
+        return created_at;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, cpf, birth_date, email, telephone, address, status);
-    }
-
-    @Override
-    public String toString() {
-        return "PatientResponseDTO{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", cpf='" + cpf + '\'' +
-                ", birth_date=" + birth_date +
-                ", email='" + email + '\'' +
-                ", telephone='" + telephone + '\'' +
-                ", address='" + address + '\'' +
-                ", status='" + status + '\'' +
-                '}';
+    public void setCreated_at(LocalDateTime created_at) {
+        this.created_at = created_at;
     }
 }

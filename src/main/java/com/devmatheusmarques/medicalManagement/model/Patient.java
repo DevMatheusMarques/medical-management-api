@@ -4,6 +4,7 @@ import com.devmatheusmarques.medicalManagement.util.Status;
 import com.devmatheusmarques.medicalManagement.util.StatusConverter;
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Objects;
 
@@ -29,11 +30,13 @@ public class Patient {
     @Convert(converter = StatusConverter.class)
     @Column(name = "status", nullable = false)
     private Status status;
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime created_at;
 
     public Patient() {
     }
 
-    public Patient(Long id, String name, String cpf, Date birth_date, String email, String telephone, String address, Status status) {
+    public Patient(Long id, String name, String cpf, Date birth_date, String email, String telephone, String address, Status status, LocalDateTime created_at) {
         this.id = id;
         this.name = name;
         this.cpf = cpf;
@@ -42,6 +45,7 @@ public class Patient {
         this.telephone = telephone;
         this.address = address;
         this.status = status;
+        this.created_at = created_at;
     }
 
     public Long getId() {
@@ -108,16 +112,24 @@ public class Patient {
         this.status = status;
     }
 
+    public LocalDateTime getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(LocalDateTime created_at) {
+        this.created_at = created_at;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Patient patient = (Patient) o;
-        return Objects.equals(id, patient.id) && Objects.equals(name, patient.name) && Objects.equals(cpf, patient.cpf) && Objects.equals(birth_date, patient.birth_date) && Objects.equals(email, patient.email) && Objects.equals(telephone, patient.telephone) && Objects.equals(address, patient.address) && Objects.equals(status, patient.status);
+        return Objects.equals(id, patient.id) && Objects.equals(name, patient.name) && Objects.equals(cpf, patient.cpf) && Objects.equals(birth_date, patient.birth_date) && Objects.equals(email, patient.email) && Objects.equals(telephone, patient.telephone) && Objects.equals(address, patient.address) && status == patient.status && Objects.equals(created_at, patient.created_at);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, cpf, birth_date, email, telephone, address, status);
+        return Objects.hash(id, name, cpf, birth_date, email, telephone, address, status, created_at);
     }
 
     @Override
@@ -130,7 +142,8 @@ public class Patient {
                 ", email='" + email + '\'' +
                 ", telephone='" + telephone + '\'' +
                 ", address='" + address + '\'' +
-                ", status='" + status + '\'' +
+                ", status=" + status +
+                ", created_at=" + created_at +
                 '}';
     }
 }
