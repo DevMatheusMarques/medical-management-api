@@ -1,7 +1,6 @@
 package com.devmatheusmarques.medicalManagement.dto;
 
 import com.devmatheusmarques.medicalManagement.util.Status;
-import com.devmatheusmarques.medicalManagement.util.UserRole;
 
 import java.util.Objects;
 
@@ -9,13 +8,13 @@ public class UserEditDTO {
 
     private String username;
     private String password;
-    private UserRole role;
+    private String role;
     private Status status;
 
     public UserEditDTO() {
     }
 
-    public UserEditDTO(String username, String password, UserRole role, Status status) {
+    public UserEditDTO(String username, String password, String role, Status status) {
         this.username = username;
         this.password = password;
         this.role = role;
@@ -38,11 +37,11 @@ public class UserEditDTO {
         this.password = password;
     }
 
-    public UserRole getRole() {
+    public String getRole() {
         return role;
     }
 
-    public void setRole(UserRole role) {
+    public void setRole(String role) {
         this.role = role;
     }
 

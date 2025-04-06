@@ -2,8 +2,8 @@ package com.devmatheusmarques.medicalManagement.util;
 
 public enum UserRole {
 
-    ADMIN("admin"),
-    USER("user");
+    ADMIN("Administrador"),
+    USER("Usuário");
 
     private final String role;
 
@@ -13,5 +13,14 @@ public enum UserRole {
 
     public String getRole() {
         return role;
+    }
+
+    public static UserRole fromString(String text) {
+        for (UserRole userRole : UserRole.values()) {
+            if (userRole.role.equalsIgnoreCase(text)) {
+                return userRole;
+            }
+        }
+        throw new IllegalArgumentException("Nível de acesso inválido: " + text);
     }
 }

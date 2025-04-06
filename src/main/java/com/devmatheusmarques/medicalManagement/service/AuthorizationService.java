@@ -21,12 +21,8 @@ public class AuthorizationService implements UserDetailsService {
         User user = userRepository.findByLogin(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + username));
 
-        if (user.getStatus() != Status.ACTIVE) {
-            try {
-                throw new InactiveUserException("Usuário inativo, acesso negado");
-            } catch (InactiveUserException e) {
-                throw new RuntimeException(e);
-            }
+        if (!user.getStatus().equals(Status.ACTIVE)) {
+            throw new InactiveUserException("Acesso negado: Usuário inativo");
         }
 
         return user;

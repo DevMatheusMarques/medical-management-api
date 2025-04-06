@@ -1,5 +1,6 @@
 package com.devmatheusmarques.medicalManagement.model;
 
+import com.devmatheusmarques.medicalManagement.util.RoleConverter;
 import com.devmatheusmarques.medicalManagement.util.Status;
 import com.devmatheusmarques.medicalManagement.util.StatusConverter;
 import com.devmatheusmarques.medicalManagement.util.UserRole;
@@ -8,10 +9,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.cglib.core.Local;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -25,18 +28,21 @@ public class User implements UserDetails {
     private String login;
     @Column(name = "password", nullable = false)
     private String password;
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = RoleConverter.class)
     @Column(name = "role", nullable = false)
     private UserRole role;
     @Convert(converter = StatusConverter.class)
     @Column(name = "status", nullable = false)
     private Status status;
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime created_at;
 
-    public User(String login, String password, UserRole role, Status status) {
+    public User(String login, String password, UserRole role, Status status , LocalDateTime created_at) {
         this.login = login;
         this.password = password;
         this.role = role;
         this.status = status;
+        this.created_at = created_at;
     }
 
     public User() {
@@ -76,6 +82,14 @@ public class User implements UserDetails {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public LocalDateTime getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(LocalDateTime created_at) {
+        this.created_at = created_at;
     }
 
     @Override

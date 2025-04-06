@@ -22,11 +22,17 @@ public class UserController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> editUser(@PathVariable Long id, @Valid @RequestBody UserEditDTO userEditDTO) {
-        String encryptedPassword = new BCryptPasswordEncoder().encode(userEditDTO.getPassword());
-        userEditDTO.setPassword(encryptedPassword);
+        if (userEditDTO.getPassword() != null && !userEditDTO.getPassword().trim().isEmpty()) {
+            String encryptedPassword = new BCryptPasswordEncoder().encode(userEditDTO.getPassword());
+            userEditDTO.setPassword(encryptedPassword);
+        } else {
+            userEditDTO.setPassword(null);
+        }
+
         userService.userEdit(id, userEditDTO);
         return ResponseEntity.noContent().build();
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {

@@ -11,7 +11,6 @@ public class StatusConverter implements AttributeConverter<Status, String> {
         if (status == null) {
             return null;
         }
-        // Converte o enum para "Ativo" ou "Inativo"
         return status == Status.ACTIVE ? "Ativo" : "Inativo";
     }
 
@@ -20,7 +19,6 @@ public class StatusConverter implements AttributeConverter<Status, String> {
         if (descricao == null) {
             return null;
         }
-        // Converte "Ativo" para Status.ACTIVE e "Inativo" para Status.INACTIVE
         return "Ativo".equalsIgnoreCase(descricao) ? Status.ACTIVE : Status.INACTIVE;
     }
 }

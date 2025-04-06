@@ -1,22 +1,35 @@
 package com.devmatheusmarques.medicalManagement.dto;
 
 import com.devmatheusmarques.medicalManagement.util.Status;
-import com.devmatheusmarques.medicalManagement.util.UserRole;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class UserResponseDTO {
+    private Long id;
     private String username;
-    private UserRole role;
+    private String password;
+    private String role;
     private Status status;
+    private LocalDateTime created_at;
 
     public UserResponseDTO() {
     }
 
-    public UserResponseDTO(String username, UserRole role, Status status) {
+    public UserResponseDTO(Long id, String username, String password, String role, Status status) {
+        this.id = id;
         this.username = username;
+        this.password = password;
         this.role = role;
         this.status = status;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getUsername() {
@@ -27,11 +40,19 @@ public class UserResponseDTO {
         this.username = username;
     }
 
-    public UserRole getRole() {
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getRole() {
         return role;
     }
 
-    public void setRole(UserRole role) {
+    public void setRole(String role) {
         this.role = role;
     }
 
@@ -43,24 +64,11 @@ public class UserResponseDTO {
         this.status = status;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        UserResponseDTO that = (UserResponseDTO) o;
-        return Objects.equals(username, that.username) && role == that.role && status == that.status;
+    public LocalDateTime getCreated_at() {
+        return created_at;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(username, role, status);
-    }
-
-    @Override
-    public String toString() {
-        return "UserResponseDTO{" +
-                "username='" + username + '\'' +
-                ", role=" + role +
-                ", status=" + status +
-                '}';
+    public void setCreated_at(LocalDateTime created_at) {
+        this.created_at = created_at;
     }
 }
