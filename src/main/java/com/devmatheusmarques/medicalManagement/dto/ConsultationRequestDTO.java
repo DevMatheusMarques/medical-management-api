@@ -16,8 +16,8 @@ import java.util.Objects;
 public class ConsultationRequestDTO {
 
     private Long id;
-    private String patient;
-    private String doctor;
+    private Patient patient;
+    private Doctor doctor;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private Date date;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
@@ -33,19 +33,19 @@ public class ConsultationRequestDTO {
         this.id = id;
     }
 
-    public String getPatient() {
+    public Patient getPatient() {
         return patient;
     }
 
-    public void setPatient(String patient) {
+    public void setPatient(Patient patient) {
         this.patient = patient;
     }
 
-    public String getDoctor() {
+    public Doctor getDoctor() {
         return doctor;
     }
 
-    public void setDoctor(String doctor) {
+    public void setDoctor(Doctor doctor) {
         this.doctor = doctor;
     }
 

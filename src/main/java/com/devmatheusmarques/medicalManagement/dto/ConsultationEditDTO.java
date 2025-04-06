@@ -4,18 +4,11 @@ import com.devmatheusmarques.medicalManagement.model.Doctor;
 import com.devmatheusmarques.medicalManagement.model.Patient;
 import com.devmatheusmarques.medicalManagement.util.ConsultationStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import lombok.*;
 
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Date;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@JsonSerialize
-public class ConsultationResponseDTO {
-
+public class ConsultationEditDTO {
     private Long id;
     private Patient patient;
     private Doctor doctor;
@@ -25,7 +18,6 @@ public class ConsultationResponseDTO {
     private LocalTime time;
     private ConsultationStatus status;
     private String observations;
-    private LocalDateTime created_at;
 
     public Long getId() {
         return id;
@@ -83,11 +75,4 @@ public class ConsultationResponseDTO {
         this.observations = observations;
     }
 
-    public LocalDateTime getCreated_at() {
-        return created_at;
-    }
-
-    public void setCreated_at(LocalDateTime created_at) {
-        this.created_at = created_at;
-    }
 }
