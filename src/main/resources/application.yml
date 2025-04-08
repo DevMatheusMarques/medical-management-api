@@ -20,7 +20,7 @@ spring:
 #    open-in-view: false
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/medical_management
+    url: jdbc:postgresql://db:5432/medical_management
     username: postgres
     password: root
     driver-class-name: org.postgresql.Driver
