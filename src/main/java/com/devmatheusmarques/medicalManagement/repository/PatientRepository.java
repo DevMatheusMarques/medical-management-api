@@ -14,10 +14,19 @@ public interface PatientRepository extends JpaRepository<Patient, Long> {
 
     Patient findByName(String name);
 
-    @Query(value = "SELECT COUNT(*) AS count, MONTH(p.created_at) AS month " +
+    //Modelo MySQL
+
+//    @Query(value = "SELECT COUNT(*) AS count, MONTH(p.created_at) AS month " +
+//            "FROM patients p " +
+//            "WHERE YEAR(p.created_at) = YEAR(CURRENT_DATE) " +
+//            "GROUP BY MONTH(p.created_at) " +
+//            "ORDER BY MONTH(p.created_at)", nativeQuery = true)
+//    List<Object[]> countPatientsByMonth();
+
+    @Query(value = "SELECT COUNT(*) AS count, EXTRACT(MONTH FROM p.created_at) AS month " +
             "FROM patients p " +
-            "WHERE YEAR(p.created_at) = YEAR(CURRENT_DATE) " +
-            "GROUP BY MONTH(p.created_at) " +
-            "ORDER BY MONTH(p.created_at)", nativeQuery = true)
+            "WHERE EXTRACT(YEAR FROM p.created_at) = EXTRACT(YEAR FROM CURRENT_DATE) " +
+            "GROUP BY EXTRACT(MONTH FROM p.created_at) " +
+            "ORDER BY month", nativeQuery = true)
     List<Object[]> countPatientsByMonth();
 }

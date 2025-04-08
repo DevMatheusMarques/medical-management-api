@@ -12,14 +12,6 @@ import com.devmatheusmarques.medicalManagement.repository.PatientRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.itextpdf.kernel.pdf.PdfDocument;
-import com.itextpdf.kernel.pdf.PdfWriter;
-import com.itextpdf.layout.Document;
-import com.itextpdf.layout.element.Paragraph;
-import com.itextpdf.layout.element.Table;
-import com.itextpdf.layout.element.Cell;
-
-import java.io.ByteArrayOutputStream;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
@@ -185,45 +177,45 @@ public class ConsultationService {
         return sb.toString();
     }
 
-    public byte[] generateReportConsultationsPDF(List<Consultation> consultations) {
-        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            PdfWriter writer = new PdfWriter(outputStream);
-            PdfDocument pdf = new PdfDocument(writer);
-            Document document = new Document(pdf);
-
-            // Adiciona um título ao documento
-            document.add(new Paragraph("Relatório de Consultas").setBold().setFontSize(16));
-
-            // Criar tabela com cabeçalhos
-            float[] columnWidths = {50f, 150f, 150f, 100f, 100f, 200f};
-            Table table = new Table(columnWidths);
-            table.addHeaderCell(new Cell().add(new Paragraph("ID")));
-            table.addHeaderCell(new Cell().add(new Paragraph("Paciente")));
-            table.addHeaderCell(new Cell().add(new Paragraph("Médico")));
-            table.addHeaderCell(new Cell().add(new Paragraph("Data")));
-            table.addHeaderCell(new Cell().add(new Paragraph("Horário")));
-            table.addHeaderCell(new Cell().add(new Paragraph("Status")));
-            table.addHeaderCell(new Cell().add(new Paragraph("Observações")));
-
-            // Preenchendo a tabela com os dados das consultations
-            for (Consultation consultation : consultations) {
-                table.addCell(new Cell().add(new Paragraph(String.valueOf(consultation.getId()))));
-                table.addCell(new Cell().add(new Paragraph(consultation.getPatient().getName())));
-                table.addCell(new Cell().add(new Paragraph(consultation.getDoctor().getName())));
-                table.addCell(new Cell().add(new Paragraph(consultation.getDate().toString())));
-                table.addCell(new Cell().add(new Paragraph(consultation.getTime().toString())));
-                table.addCell(new Cell().add(new Paragraph(String.valueOf(consultation.getStatus()))));
-                table.addCell(new Cell().add(new Paragraph(consultation.getObservations() != null ? consultation.getObservations() : "-")));
-            }
-
-            // Adicionando a tabela ao documento
-            document.add(table);
-            document.close();
-
-            return outputStream.toByteArray(); // Retorna o PDF como um array de bytes
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+//    public byte[] generateReportConsultationsPDF(List<Consultation> consultations) {
+//        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+//            PdfWriter writer = new PdfWriter(outputStream);
+//            PdfDocument pdf = new PdfDocument(writer);
+//            Document document = new Document(pdf);
+//
+//            // Adiciona um título ao documento
+//            document.add(new Paragraph("Relatório de Consultas").setBold().setFontSize(16));
+//
+//            // Criar tabela com cabeçalhos
+//            float[] columnWidths = {50f, 150f, 150f, 100f, 100f, 200f};
+//            Table table = new Table(columnWidths);
+//            table.addHeaderCell(new Cell().add(new Paragraph("ID")));
+//            table.addHeaderCell(new Cell().add(new Paragraph("Paciente")));
+//            table.addHeaderCell(new Cell().add(new Paragraph("Médico")));
+//            table.addHeaderCell(new Cell().add(new Paragraph("Data")));
+//            table.addHeaderCell(new Cell().add(new Paragraph("Horário")));
+//            table.addHeaderCell(new Cell().add(new Paragraph("Status")));
+//            table.addHeaderCell(new Cell().add(new Paragraph("Observações")));
+//
+//            // Preenchendo a tabela com os dados das consultations
+//            for (Consultation consultation : consultations) {
+//                table.addCell(new Cell().add(new Paragraph(String.valueOf(consultation.getId()))));
+//                table.addCell(new Cell().add(new Paragraph(consultation.getPatient().getName())));
+//                table.addCell(new Cell().add(new Paragraph(consultation.getDoctor().getName())));
+//                table.addCell(new Cell().add(new Paragraph(consultation.getDate().toString())));
+//                table.addCell(new Cell().add(new Paragraph(consultation.getTime().toString())));
+//                table.addCell(new Cell().add(new Paragraph(String.valueOf(consultation.getStatus()))));
+//                table.addCell(new Cell().add(new Paragraph(consultation.getObservations() != null ? consultation.getObservations() : "-")));
+//            }
+//
+//            // Adicionando a tabela ao documento
+//            document.add(table);
+//            document.close();
+//
+//            return outputStream.toByteArray(); // Retorna o PDF como um array de bytes
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+//    }
 }

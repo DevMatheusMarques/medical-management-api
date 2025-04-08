@@ -2,18 +2,35 @@ spring:
   application:
     name: medicalManagement
 
+#  datasource:
+#    url: jdbc:mysql://localhost:3306/medical_management?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
+#    username: root
+#    password: root
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#    properties:
+#      hibernate:
+#        dialect: org.hibernate.dialect.MySQLDialect
+#        jdbc:
+#          time_zone: America/Sao_Paulo
+#    show-sql: true
+#    open-in-view: false
+
   datasource:
-    url: jdbc:mysql://localhost:3306/medical_management?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
-    username: root
+    url: jdbc:postgresql://localhost:5432/medical_management
+    username: postgres
     password: root
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    driver-class-name: org.postgresql.Driver
 
   jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect
         jdbc:
           time_zone: America/Sao_Paulo
     show-sql: true

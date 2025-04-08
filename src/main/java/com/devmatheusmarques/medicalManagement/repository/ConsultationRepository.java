@@ -16,18 +16,34 @@ public interface ConsultationRepository extends JpaRepository<Consultation, Long
 
     List<Consultation> findByDoctorId(Long doctorId);
 
-    @Query(value = "SELECT COUNT(*) AS count, MONTH(c.created_at) AS month " +
+    //Modelo MySQL
+
+//    @Query(value = "SELECT COUNT(*) AS count, MONTH(c.created_at) AS month " +
+//            "FROM consultations c " +
+//            "WHERE YEAR(c.created_at) = YEAR(CURRENT_DATE) " +
+//            "GROUP BY MONTH(c.created_at) " +
+//            "ORDER BY MONTH(c.created_at)", nativeQuery = true)
+//    List<Object[]> countConsultationsByMonth();
+//
+//    @Query(value = "SELECT d.specialty AS specialty, COUNT(*) AS count " +
+//            "FROM consultations c " +
+//            "JOIN doctors d ON c.doctor_id = d.id " +
+//            "GROUP BY d.specialty " +
+//            "ORDER BY count DESC", nativeQuery = true)
+//    List<Object[]> countConsultationsBySpecialtyNative();
+
+    @Query(value = "SELECT COUNT(*) AS count, EXTRACT(MONTH FROM c.created_at) AS month " +
             "FROM consultations c " +
-            "WHERE YEAR(c.created_at) = YEAR(CURRENT_DATE) " +
-            "GROUP BY MONTH(c.created_at) " +
-            "ORDER BY MONTH(c.created_at)", nativeQuery = true)
+            "WHERE EXTRACT(YEAR FROM c.created_at) = EXTRACT(YEAR FROM CURRENT_DATE) " +
+            "GROUP BY EXTRACT(MONTH FROM c.created_at) " +
+            "ORDER BY month", nativeQuery = true)
     List<Object[]> countConsultationsByMonth();
 
-    @Query(value = "SELECT d.specialty AS specialty, COUNT(*) AS count " +
+    @Query(value = "SELECT d.specialty AS specialty, COUNT(*) AS total " +
             "FROM consultations c " +
             "JOIN doctors d ON c.doctor_id = d.id " +
             "GROUP BY d.specialty " +
-            "ORDER BY count DESC", nativeQuery = true)
+            "ORDER BY total DESC", nativeQuery = true)
     List<Object[]> countConsultationsBySpecialtyNative();
 
 
