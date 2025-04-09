@@ -97,6 +97,8 @@ public class ConsultationService {
             existingConsultation.setDoctor(doctor.orElse(null));
         }
 
+        existingConsultation.setUpdated_at(LocalDateTime.now());
+
         consultationRepository.save(existingConsultation);
     }
 

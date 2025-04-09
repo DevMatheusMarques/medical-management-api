@@ -88,6 +88,8 @@ public class PatientService {
             existingPatient.setStatus(patientEditDTO.getStatus());
         }
 
+        existingPatient.setUpdated_at(LocalDateTime.now());
+
         patientRepository.save(existingPatient);
     }
 

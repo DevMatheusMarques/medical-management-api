@@ -79,6 +79,8 @@ public class DoctorService {
             existingDoctor.setTelephone(doctorEditDTO.getTelephone());
         }
 
+        existingDoctor.setUpdated_at(LocalDateTime.now());
+
         doctorRepository.save(existingDoctor);
     }
 
