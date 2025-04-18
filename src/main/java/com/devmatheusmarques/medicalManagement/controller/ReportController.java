@@ -1,8 +1,10 @@
 package com.devmatheusmarques.medicalManagement.controller;
 
+import com.devmatheusmarques.medicalManagement.dto.*;
 import com.devmatheusmarques.medicalManagement.model.Consultation;
 import com.devmatheusmarques.medicalManagement.model.Patient;
 import com.devmatheusmarques.medicalManagement.service.ConsultationService;
+import com.devmatheusmarques.medicalManagement.service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
@@ -18,52 +20,36 @@ import java.util.List;
 public class ReportController {
 
     @Autowired
-    private ConsultationService consultationService;
+    private ReportService reportService;
 
-    @GetMapping("/consultatations")
-    public ResponseEntity<List<Consultation>> getConsultationsPerPeriod(
-            @RequestParam("start") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate start,
-            @RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end) {
-
-        List<Consultation> consultations = consultationService.getConsultationsPerPeriod(start, end);
-        return ResponseEntity.ok(consultations);
+    @PostMapping("/patients")
+    public List<PatientConsultationReportDTO> getPatients(@RequestBody ReportFilterDTO filter) {
+        return reportService.getConsultationsByPatient(filter);
     }
 
-    @GetMapping("/patients/{idDoctor}")
-    public ResponseEntity<List<Patient>> getPacientesAtendidosPorMedico(@PathVariable Long idDoctor) {
-        List<Patient> patients = consultationService.getPatientsPerDoctor(idDoctor);
-        return ResponseEntity.ok(patients);
+    @PostMapping("/doctors")
+    public List<DoctorReportDTO> getDoctors(@RequestBody ReportFilterDTO filter) {
+        return reportService.getDoctorsReport(filter);
     }
 
-    @GetMapping("/consultations/csv")
-    public ResponseEntity<String> getConsultationsCSV(
-            @RequestParam("start") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate start,
-            @RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end) {
-
-        List<Consultation> consultations = consultationService.getConsultationsPerPeriod(start, end);
-        String csvReport = consultationService.generateReportQueriesCSV(consultations);
-
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=consultations.csv")
-                .contentType(MediaType.TEXT_PLAIN)
-                .body(csvReport);
+    @PostMapping("/consultations")
+    public List<ConsultationReportDTO> getConsultations(@RequestBody ReportFilterDTO filter) {
+        return reportService.getConsultations(filter);
     }
 
-//    @GetMapping("/consultations/pdf")
-//    public ResponseEntity<byte[]> getConsultationsPDF(
-//            @RequestParam("start") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate start,
-//            @RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end) {
-//
-//        List<Consultation> consultations = consultationService.getConsultationsPerPeriod(start, end);
-//        byte[] pdfBytes = consultationService.generateReportConsultationsPDF(consultations);
-//
-//        if (pdfBytes == null) {
-//            return ResponseEntity.internalServerError().build();
-//        }
-//
-//        return ResponseEntity.ok()
-//                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=relatorio_consultas.pdf")
-//                .contentType(MediaType.APPLICATION_PDF)
-//                .body(pdfBytes);
-//    }
+    @PostMapping("/specialty-consultations")
+    public List<SpecialtyConsultationReportDTO> getBySpecialty(@RequestBody ReportFilterDTO filter) {
+        return reportService.getConsultationsBySpecialty(filter);
+    }
+
+    @PostMapping("/patient-consultations")
+    public List<PatientConsultationReportDTO> getByPatient(@RequestBody ReportFilterDTO filter) {
+        return reportService.getConsultationsByPatient(filter);
+    }
+
+    @PostMapping("/doctor-consultations")
+    public List<DoctorReportDTO> getByDoctor(@RequestBody ReportFilterDTO filter) {
+        return reportService.getDoctorsReport(filter);
+    }
 }
+
