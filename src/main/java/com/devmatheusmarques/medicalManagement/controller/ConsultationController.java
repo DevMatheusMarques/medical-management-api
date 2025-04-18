@@ -22,8 +22,8 @@ public class ConsultationController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ConsultationResponseDTO> createConsultation(@Valid @RequestBody ConsultationRequestDTO consultationRequestDTO) {
-        ConsultationResponseDTO response = consultationService.consultationRegister(consultationRequestDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        consultationService.consultationRegister(consultationRequestDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
 

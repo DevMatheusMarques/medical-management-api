@@ -5,15 +5,15 @@ import com.devmatheusmarques.medicalManagement.model.Patient;
 import com.devmatheusmarques.medicalManagement.util.ConsultationStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Date;
 
 public class ConsultationEditDTO {
     private Long id;
     private Patient patient;
     private Doctor doctor;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
-    private Date date;
+    private LocalDate date;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
     private LocalTime time;
     private ConsultationStatus status;
@@ -43,11 +43,11 @@ public class ConsultationEditDTO {
         this.doctor = doctor;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

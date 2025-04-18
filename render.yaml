@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: medical-management-api
+    env: docker
+    plan: free
+    branch: backend
+    autoDeploy: true

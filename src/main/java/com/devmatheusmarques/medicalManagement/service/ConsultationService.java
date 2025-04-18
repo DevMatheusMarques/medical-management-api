@@ -12,16 +12,9 @@ import com.devmatheusmarques.medicalManagement.repository.PatientRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.itextpdf.kernel.pdf.PdfDocument;
-import com.itextpdf.kernel.pdf.PdfWriter;
-import com.itextpdf.layout.Document;
-import com.itextpdf.layout.element.Paragraph;
-import com.itextpdf.layout.element.Table;
-import com.itextpdf.layout.element.Cell;
-
-import java.io.ByteArrayOutputStream;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Date;
 import java.util.List;
 import java.time.LocalDate;
 import java.util.Optional;
@@ -39,7 +32,7 @@ public class ConsultationService {
     @Autowired
     private ModelMapper modelMapper;
 
-    public ConsultationResponseDTO consultationRegister(ConsultationRequestDTO consultationRequestDTO) {
+    public void consultationRegister(ConsultationRequestDTO consultationRequestDTO) {
         Optional<Patient> patient = patientRepository.findById(consultationRequestDTO.getPatient().getId());
         if (patient.isEmpty()) {
             throw new IllegalArgumentException("Paciente não encontrado.");
@@ -50,13 +43,20 @@ public class ConsultationService {
             throw new IllegalArgumentException("Médico não encontrado.");
         }
 
+        boolean exists = consultationRepository.findByDoctorAndDateTime(
+                consultationRequestDTO.getDoctor().getId(),
+                consultationRequestDTO.getDate(),
+                consultationRequestDTO.getTime()
+        ).isPresent();
+
+        if (exists) {
+            throw new IllegalArgumentException("O médico já possui uma consulta marcada nesse dia e horário.");
+        }
+
         Consultation consultation = modelMapper.map(consultationRequestDTO, Consultation.class);
         consultation.setCreated_at(LocalDateTime.now());
 
         consultationRepository.save(consultation);
-
-        return getConsultationResponseDTO(consultation);
-
     }
 
     private static ConsultationResponseDTO getConsultationResponseDTO(Consultation consultation) {
@@ -76,35 +76,33 @@ public class ConsultationService {
         Consultation existingConsultation = consultationRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Consulta não encontrada."));
 
-        if (consultationEditDTO.getDate() != null) {
-            existingConsultation.setDate(consultationEditDTO.getDate());
+        Long doctorId = consultationEditDTO.getDoctor() != null ? consultationEditDTO.getDoctor().getId() : existingConsultation.getDoctor().getId();
+        LocalDate date = consultationEditDTO.getDate() != null ? consultationEditDTO.getDate() : existingConsultation.getDate();
+        LocalTime time = consultationEditDTO.getTime() != null ? consultationEditDTO.getTime() : existingConsultation.getTime();
+
+        Optional<Consultation> conflict = consultationRepository.findByDoctorAndDateTime(doctorId, date, time);
+        if (conflict.isPresent() && !conflict.get().getId().equals(id)) {
+            throw new IllegalArgumentException("O médico já possui uma consulta nesse dia e horário.");
         }
-        if (consultationEditDTO.getTime() != null) {
-            existingConsultation.setTime(consultationEditDTO.getTime());
-        }
-        if (consultationEditDTO.getStatus() != null) {
-            existingConsultation.setStatus(consultationEditDTO.getStatus());
-        }
-        if (consultationEditDTO.getObservations() != null) {
-            existingConsultation.setObservations(consultationEditDTO.getObservations());
-        }
+
+        if (consultationEditDTO.getDate() != null) existingConsultation.setDate(date);
+        if (consultationEditDTO.getTime() != null) existingConsultation.setTime(time);
+        if (consultationEditDTO.getStatus() != null) existingConsultation.setStatus(consultationEditDTO.getStatus());
+        if (consultationEditDTO.getObservations() != null) existingConsultation.setObservations(consultationEditDTO.getObservations());
 
         if (consultationEditDTO.getPatient() != null) {
             Optional<Patient> patient = patientRepository.findById(consultationEditDTO.getPatient().getId());
-            if (patient.isEmpty()) {
-                throw new IllegalArgumentException("Paciente não encontrado.");
-            }
-            existingConsultation.setPatient(patient.orElse(null));
+            if (patient.isEmpty()) throw new IllegalArgumentException("Paciente não encontrado.");
+            existingConsultation.setPatient(patient.get());
         }
 
         if (consultationEditDTO.getDoctor() != null) {
             Optional<Doctor> doctor = doctorRepository.findById(consultationEditDTO.getDoctor().getId());
-            if (doctor.isEmpty()) {
-                throw new IllegalArgumentException("Médico não encontrado.");
-            }
-            existingConsultation.setDoctor(doctor.orElse(null));
+            if (doctor.isEmpty()) throw new IllegalArgumentException("Médico não encontrado.");
+            existingConsultation.setDoctor(doctor.get());
         }
 
+        existingConsultation.setUpdated_at(LocalDateTime.now());
         consultationRepository.save(existingConsultation);
     }
 
@@ -185,45 +183,45 @@ public class ConsultationService {
         return sb.toString();
     }
 
-    public byte[] generateReportConsultationsPDF(List<Consultation> consultations) {
-        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            PdfWriter writer = new PdfWriter(outputStream);
-            PdfDocument pdf = new PdfDocument(writer);
-            Document document = new Document(pdf);
-
-            // Adiciona um título ao documento
-            document.add(new Paragraph("Relatório de Consultas").setBold().setFontSize(16));
-
-            // Criar tabela com cabeçalhos
-            float[] columnWidths = {50f, 150f, 150f, 100f, 100f, 200f};
-            Table table = new Table(columnWidths);
-            table.addHeaderCell(new Cell().add(new Paragraph("ID")));
-            table.addHeaderCell(new Cell().add(new Paragraph("Paciente")));
-            table.addHeaderCell(new Cell().add(new Paragraph("Médico")));
-            table.addHeaderCell(new Cell().add(new Paragraph("Data")));
-            table.addHeaderCell(new Cell().add(new Paragraph("Horário")));
-            table.addHeaderCell(new Cell().add(new Paragraph("Status")));
-            table.addHeaderCell(new Cell().add(new Paragraph("Observações")));
-
-            // Preenchendo a tabela com os dados das consultations
-            for (Consultation consultation : consultations) {
-                table.addCell(new Cell().add(new Paragraph(String.valueOf(consultation.getId()))));
-                table.addCell(new Cell().add(new Paragraph(consultation.getPatient().getName())));
-                table.addCell(new Cell().add(new Paragraph(consultation.getDoctor().getName())));
-                table.addCell(new Cell().add(new Paragraph(consultation.getDate().toString())));
-                table.addCell(new Cell().add(new Paragraph(consultation.getTime().toString())));
-                table.addCell(new Cell().add(new Paragraph(String.valueOf(consultation.getStatus()))));
-                table.addCell(new Cell().add(new Paragraph(consultation.getObservations() != null ? consultation.getObservations() : "-")));
-            }
-
-            // Adicionando a tabela ao documento
-            document.add(table);
-            document.close();
-
-            return outputStream.toByteArray(); // Retorna o PDF como um array de bytes
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+//    public byte[] generateReportConsultationsPDF(List<Consultation> consultations) {
+//        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+//            PdfWriter writer = new PdfWriter(outputStream);
+//            PdfDocument pdf = new PdfDocument(writer);
+//            Document document = new Document(pdf);
+//
+//            // Adiciona um título ao documento
+//            document.add(new Paragraph("Relatório de Consultas").setBold().setFontSize(16));
+//
+//            // Criar tabela com cabeçalhos
+//            float[] columnWidths = {50f, 150f, 150f, 100f, 100f, 200f};
+//            Table table = new Table(columnWidths);
+//            table.addHeaderCell(new Cell().add(new Paragraph("ID")));
+//            table.addHeaderCell(new Cell().add(new Paragraph("Paciente")));
+//            table.addHeaderCell(new Cell().add(new Paragraph("Médico")));
+//            table.addHeaderCell(new Cell().add(new Paragraph("Data")));
+//            table.addHeaderCell(new Cell().add(new Paragraph("Horário")));
+//            table.addHeaderCell(new Cell().add(new Paragraph("Status")));
+//            table.addHeaderCell(new Cell().add(new Paragraph("Observações")));
+//
+//            // Preenchendo a tabela com os dados das consultations
+//            for (Consultation consultation : consultations) {
+//                table.addCell(new Cell().add(new Paragraph(String.valueOf(consultation.getId()))));
+//                table.addCell(new Cell().add(new Paragraph(consultation.getPatient().getName())));
+//                table.addCell(new Cell().add(new Paragraph(consultation.getDoctor().getName())));
+//                table.addCell(new Cell().add(new Paragraph(consultation.getDate().toString())));
+//                table.addCell(new Cell().add(new Paragraph(consultation.getTime().toString())));
+//                table.addCell(new Cell().add(new Paragraph(String.valueOf(consultation.getStatus()))));
+//                table.addCell(new Cell().add(new Paragraph(consultation.getObservations() != null ? consultation.getObservations() : "-")));
+//            }
+//
+//            // Adicionando a tabela ao documento
+//            document.add(table);
+//            document.close();
+//
+//            return outputStream.toByteArray(); // Retorna o PDF como um array de bytes
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+//    }
 }

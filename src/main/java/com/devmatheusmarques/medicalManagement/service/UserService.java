@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -41,6 +42,8 @@ public class UserService {
         if (userEditDTO.getStatus() != null) {
             existingUser.setStatus(userEditDTO.getStatus());
         }
+
+        existingUser.setUpdated_at(LocalDateTime.now());
 
         userRepository.save(existingUser);
     }

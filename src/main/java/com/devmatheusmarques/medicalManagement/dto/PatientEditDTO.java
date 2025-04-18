@@ -19,7 +19,9 @@ public class PatientEditDTO {
     private Date birth_date;
     private String email;
     private String telephone;
-    private String address;
+    private String zip_code;
+    private AddressRequestDTO address;
+    private String address_number;
     private Status status;
 
     public Long getId() {
@@ -62,12 +64,28 @@ public class PatientEditDTO {
         this.telephone = telephone;
     }
 
-    public String getAddress() {
+    public String getZip_code() {
+        return zip_code;
+    }
+
+    public void setZip_code(String zip_code) {
+        this.zip_code = zip_code;
+    }
+
+    public AddressRequestDTO getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
+    public void setAddress(AddressRequestDTO address) {
         this.address = address;
+    }
+
+    public String getAddress_number() {
+        return address_number;
+    }
+
+    public void setAddress_number(String address_number) {
+        this.address_number = address_number;
     }
 
     public Status getStatus() {
@@ -76,30 +94,5 @@ public class PatientEditDTO {
 
     public void setStatus(Status status) {
         this.status = status;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        PatientEditDTO that = (PatientEditDTO) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(birth_date, that.birth_date) && Objects.equals(email, that.email) && Objects.equals(telephone, that.telephone) && Objects.equals(address, that.address) && status == that.status;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, birth_date, email, telephone, address, status);
-    }
-
-    @Override
-    public String toString() {
-        return "PatientEditDTO{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", birth_date=" + birth_date +
-                ", email='" + email + '\'' +
-                ", telephone='" + telephone + '\'' +
-                ", address='" + address + '\'' +
-                ", status=" + status +
-                '}';
     }
 }

@@ -21,7 +21,8 @@ public class PatientResponseDTO {
     private Date birth_date;
     private String email;
     private String telephone;
-    private String address;
+    private AddressResponseDTO address;
+    private String address_number;
     private Status status;
     private LocalDateTime created_at;
 
@@ -73,12 +74,20 @@ public class PatientResponseDTO {
         this.telephone = telephone;
     }
 
-    public String getAddress() {
+    public AddressResponseDTO getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
+    public void setAddress(AddressResponseDTO address) {
         this.address = address;
+    }
+
+    public String getAddress_number() {
+        return address_number;
+    }
+
+    public void setAddress_number(String address_number) {
+        this.address_number = address_number;
     }
 
     public Status getStatus() {

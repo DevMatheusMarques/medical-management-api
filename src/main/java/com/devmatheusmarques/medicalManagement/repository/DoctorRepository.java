@@ -13,12 +13,11 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
 
     Optional<Doctor> findByEmail(String email);
 
-    Doctor findByName(String name);
-
-    @Query(value = "SELECT COUNT(*) AS count, MONTH(d.created_at) AS month " +
+    @Query(value = "SELECT COUNT(*) AS count, EXTRACT(MONTH FROM d.created_at) AS month " +
             "FROM doctors d " +
-            "WHERE YEAR(d.created_at) = YEAR(CURRENT_DATE) " +
-            "GROUP BY MONTH(d.created_at) " +
-            "ORDER BY MONTH(d.created_at)", nativeQuery = true)
+            "WHERE EXTRACT(YEAR FROM d.created_at) = EXTRACT(YEAR FROM CURRENT_DATE) " +
+            "GROUP BY EXTRACT(MONTH FROM d.created_at) " +
+            "ORDER BY month", nativeQuery = true)
     List<Object[]> countDoctorsByMonth();
+
 }

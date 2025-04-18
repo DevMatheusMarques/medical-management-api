@@ -10,6 +10,7 @@ import com.devmatheusmarques.medicalManagement.util.Status;
 import com.devmatheusmarques.medicalManagement.util.UserRole;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -37,11 +39,17 @@ public class AuthenticationController {
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
         var auth = authenticationManager.authenticate(usernamePassword);
 
-        if(auth == null) return ResponseEntity.badRequest().build();
+        if (auth == null) return ResponseEntity.badRequest().build();
 
-        var token = tokenService.generateToken((User) auth.getPrincipal());
+        var user = (User) auth.getPrincipal();
 
-        return ResponseEntity.ok(new LoginResponseDTO(token));
+        var accessToken = tokenService.generateToken(user);
+        var refreshToken = tokenService.generateRefreshToken(user);
+
+        user.setRefreshToken(refreshToken);
+        userRepository.save(user);
+
+        return ResponseEntity.ok(new LoginResponseDTO(accessToken, refreshToken));
     }
 
     @PostMapping("/register")
@@ -58,5 +66,32 @@ public class AuthenticationController {
         userRepository.save(newUser);
 
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/auth/refresh")
+    public ResponseEntity<?> refreshToken(@RequestBody Map<String, String> request) {
+        String refreshToken = request.get("refresh_token");
+
+        if (refreshToken == null || refreshToken.isBlank()) {
+            return ResponseEntity.badRequest().body("Refresh token is required");
+        }
+
+        String userLogin = tokenService.validateToken(refreshToken);
+
+        if (userLogin.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh token");
+        }
+
+        User user = userRepository.findByLogin(userLogin)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // VERIFICAÇÃO EXTRA: comparar o token recebido com o armazenado
+        if (!refreshToken.equals(user.getRefreshToken())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh token");
+        }
+
+        String newAccessToken = tokenService.generateToken(user);
+
+        return ResponseEntity.ok(Map.of("access_token", newAccessToken));
     }
 }

@@ -1,8 +1,6 @@
 package com.devmatheusmarques.medicalManagement.model;
 
 import jakarta.persistence.*;
-import lombok.*;
-
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -15,19 +13,22 @@ public class Doctor {
     private String name;
     @Column(name = "crm", unique = true, nullable = false)
     private String crm;
-    @Column(name = "specialty", nullable = false)
-    private String specialty;
+    @ManyToOne
+    @JoinColumn(name = "specialties_id", nullable = false, foreignKey = @ForeignKey(name = "FK_doctor_specialties"))
+    private Specialty specialty;
     @Column(name = "email", unique = true, nullable = false)
     private String email;
     @Column(name = "telephone", nullable = false)
     private String telephone;
     @Column(name = "created_at", nullable = false)
     private LocalDateTime created_at;
+    @Column(name = "updated_at")
+    private LocalDateTime updated_at;
 
     public Doctor() {
     }
 
-    public Doctor(Long id, String name, String crm, String specialty, String email, String telephone, LocalDateTime created_at) {
+    public Doctor(Long id, String name, String crm, Specialty specialty, String email, String telephone, LocalDateTime created_at) {
         this.id = id;
         this.name = name;
         this.crm = crm;
@@ -61,11 +62,11 @@ public class Doctor {
         this.crm = crm;
     }
 
-    public String getSpecialty() {
+    public Specialty getSpecialty() {
         return specialty;
     }
 
-    public void setSpecialty(String specialty) {
+    public void setSpecialty(Specialty specialty) {
         this.specialty = specialty;
     }
 
@@ -91,6 +92,14 @@ public class Doctor {
 
     public void setCreated_at(LocalDateTime created_at) {
         this.created_at = created_at;
+    }
+
+    public LocalDateTime getUpdated_at() {
+        return updated_at;
+    }
+
+    public void setUpdated_at(LocalDateTime updated_at) {
+        this.updated_at = updated_at;
     }
 
     @Override

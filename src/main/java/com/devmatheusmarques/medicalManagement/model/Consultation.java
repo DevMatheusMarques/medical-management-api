@@ -6,6 +6,7 @@ import com.devmatheusmarques.medicalManagement.util.StatusConverter;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Date;
@@ -23,9 +24,8 @@ public class Consultation {
     @ManyToOne
     @JoinColumn(name = "doctor_id", nullable = false, foreignKey = @ForeignKey(name = "FK_consultation_doctor"))
     private Doctor doctor;
-    @Temporal(TemporalType.DATE)
     @Column(name = "date", nullable = false)
-    private Date date;
+    private LocalDate date;
     @Temporal(TemporalType.TIME)
     @Column(name = "time", nullable = false)
     private LocalTime time;
@@ -36,11 +36,13 @@ public class Consultation {
     private String observations;
     @Column(name = "created_at", nullable = false)
     private LocalDateTime created_at;
+    @Column(name = "updated_at")
+    private LocalDateTime updated_at;
 
     public Consultation() {
     }
 
-    public Consultation(Long id, Patient patient, Doctor doctor, Date date, LocalTime time, ConsultationStatus status, String observations, LocalDateTime created_at) {
+    public Consultation(Long id, Patient patient, Doctor doctor, LocalDate date, LocalTime time, ConsultationStatus status, String observations, LocalDateTime created_at) {
         this.id = id;
         this.patient = patient;
         this.doctor = doctor;
@@ -75,11 +77,11 @@ public class Consultation {
         this.doctor = doctor;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
@@ -113,6 +115,14 @@ public class Consultation {
 
     public void setCreated_at(LocalDateTime created_at) {
         this.created_at = created_at;
+    }
+
+    public LocalDateTime getUpdated_at() {
+        return updated_at;
+    }
+
+    public void setUpdated_at(LocalDateTime updated_at) {
+        this.updated_at = updated_at;
     }
 
     @Override

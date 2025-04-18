@@ -49,6 +49,19 @@ public class TokenService {
         }
     }
 
+    public String generateRefreshToken(User user) {
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(secret);
+            return JWT.create()
+                    .withIssuer("medical-management")
+                    .withSubject(user.getLogin())
+                    .withExpiresAt(LocalDateTime.now().plusDays(7).toInstant(ZoneOffset.of("-03:00")))
+                    .sign(algorithm);
+        } catch (JWTCreationException exception) {
+            throw new RuntimeException("Error while generating refresh token", exception);
+        }
+    }
+
     private Instant genExpirationDate() {
         return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
     }

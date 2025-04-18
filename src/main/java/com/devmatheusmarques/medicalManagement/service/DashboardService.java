@@ -24,20 +24,13 @@ public class DashboardService {
     @Autowired
     private ConsultationRepository consultationRepository;
 
-    // Método para obter os dados de dashboard
     public DashboardData getDashboardData() {
         DashboardData data = new DashboardData();
 
-        // Obtendo o número de pacientes por mês
         data.setPatients(getNewPatientsPerMonth());
-
-        // Obtendo o número de médicos por mês
         data.setDoctors(getNewDoctorsPerMonth());
-
-        // Obtendo o número de consultas por mês
         data.setConsultations(getNewConsultationsPerMonth());
 
-        // Definir os meses do ano (pode ser fixo ou calculado)
         data.setMonths(new String[]{"Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"});
 
         data.setSpecialities(countConsultationsBySpecialtyNative());
@@ -45,14 +38,17 @@ public class DashboardService {
         return data;
     }
 
-    // Métodos para obter os novos pacientes, médicos e consultas por mês
     public int[] getNewPatientsPerMonth() {
         List<Object[]> results = patientRepository.countPatientsByMonth();
+        return getInts(results);
+    }
+
+    private int[] getInts(List<Object[]> results) {
         int[] patientsPerMonth = new int[12];
 
         for (Object[] result : results) {
-            int month = (Integer) result[1];
-            int count = ((Long) result[0]).intValue();
+            int month = ((Number) result[1]).intValue();
+            int count = ((Number) result[0]).intValue();
             patientsPerMonth[month - 1] = count;
         }
 
@@ -61,28 +57,12 @@ public class DashboardService {
 
     public int[] getNewDoctorsPerMonth() {
         List<Object[]> results = doctorRepository.countDoctorsByMonth();
-        int[] doctorsPerMonth = new int[12];
-
-        for (Object[] result : results) {
-            int month = (Integer) result[1];
-            int count = ((Long) result[0]).intValue();
-            doctorsPerMonth[month - 1] = count;
-        }
-
-        return doctorsPerMonth;
+        return getInts(results);
     }
 
     public int[] getNewConsultationsPerMonth() {
         List<Object[]> results = consultationRepository.countConsultationsByMonth();
-        int[] consultationsPerMonth = new int[12];
-
-        for (Object[] result : results) {
-            int month = (Integer) result[1];
-            int count = ((Long) result[0]).intValue();
-            consultationsPerMonth[month - 1] = count;
-        }
-
-        return consultationsPerMonth;
+        return getInts(results);
     }
 
     public List<Map<String, Object>> countConsultationsBySpecialtyNative() {
@@ -92,11 +72,11 @@ public class DashboardService {
         for (Object[] result : results) {
             Map<String, Object> map = new HashMap<>();
             map.put("name", result[0]);
-            map.put("count", result[1]);
+            map.put("count", ((Number) result[1]).intValue());
             response.add(map);
         }
+
         return response;
     }
-
 }
 
