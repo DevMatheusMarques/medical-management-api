@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Date;
 import java.util.List;
 import java.time.LocalDate;
 import java.util.Optional;
@@ -31,7 +32,7 @@ public class ConsultationService {
     @Autowired
     private ModelMapper modelMapper;
 
-    public ConsultationResponseDTO consultationRegister(ConsultationRequestDTO consultationRequestDTO) {
+    public void consultationRegister(ConsultationRequestDTO consultationRequestDTO) {
         Optional<Patient> patient = patientRepository.findById(consultationRequestDTO.getPatient().getId());
         if (patient.isEmpty()) {
             throw new IllegalArgumentException("Paciente não encontrado.");
@@ -42,13 +43,20 @@ public class ConsultationService {
             throw new IllegalArgumentException("Médico não encontrado.");
         }
 
+        boolean exists = consultationRepository.findByDoctorAndDateTime(
+                consultationRequestDTO.getDoctor().getId(),
+                consultationRequestDTO.getDate(),
+                consultationRequestDTO.getTime()
+        ).isPresent();
+
+        if (exists) {
+            throw new IllegalArgumentException("O médico já possui uma consulta marcada nesse dia e horário.");
+        }
+
         Consultation consultation = modelMapper.map(consultationRequestDTO, Consultation.class);
         consultation.setCreated_at(LocalDateTime.now());
 
         consultationRepository.save(consultation);
-
-        return getConsultationResponseDTO(consultation);
-
     }
 
     private static ConsultationResponseDTO getConsultationResponseDTO(Consultation consultation) {
@@ -68,37 +76,33 @@ public class ConsultationService {
         Consultation existingConsultation = consultationRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Consulta não encontrada."));
 
-        if (consultationEditDTO.getDate() != null) {
-            existingConsultation.setDate(consultationEditDTO.getDate());
+        Long doctorId = consultationEditDTO.getDoctor() != null ? consultationEditDTO.getDoctor().getId() : existingConsultation.getDoctor().getId();
+        LocalDate date = consultationEditDTO.getDate() != null ? consultationEditDTO.getDate() : existingConsultation.getDate();
+        LocalTime time = consultationEditDTO.getTime() != null ? consultationEditDTO.getTime() : existingConsultation.getTime();
+
+        Optional<Consultation> conflict = consultationRepository.findByDoctorAndDateTime(doctorId, date, time);
+        if (conflict.isPresent() && !conflict.get().getId().equals(id)) {
+            throw new IllegalArgumentException("O médico já possui uma consulta nesse dia e horário.");
         }
-        if (consultationEditDTO.getTime() != null) {
-            existingConsultation.setTime(consultationEditDTO.getTime());
-        }
-        if (consultationEditDTO.getStatus() != null) {
-            existingConsultation.setStatus(consultationEditDTO.getStatus());
-        }
-        if (consultationEditDTO.getObservations() != null) {
-            existingConsultation.setObservations(consultationEditDTO.getObservations());
-        }
+
+        if (consultationEditDTO.getDate() != null) existingConsultation.setDate(date);
+        if (consultationEditDTO.getTime() != null) existingConsultation.setTime(time);
+        if (consultationEditDTO.getStatus() != null) existingConsultation.setStatus(consultationEditDTO.getStatus());
+        if (consultationEditDTO.getObservations() != null) existingConsultation.setObservations(consultationEditDTO.getObservations());
 
         if (consultationEditDTO.getPatient() != null) {
             Optional<Patient> patient = patientRepository.findById(consultationEditDTO.getPatient().getId());
-            if (patient.isEmpty()) {
-                throw new IllegalArgumentException("Paciente não encontrado.");
-            }
-            existingConsultation.setPatient(patient.orElse(null));
+            if (patient.isEmpty()) throw new IllegalArgumentException("Paciente não encontrado.");
+            existingConsultation.setPatient(patient.get());
         }
 
         if (consultationEditDTO.getDoctor() != null) {
             Optional<Doctor> doctor = doctorRepository.findById(consultationEditDTO.getDoctor().getId());
-            if (doctor.isEmpty()) {
-                throw new IllegalArgumentException("Médico não encontrado.");
-            }
-            existingConsultation.setDoctor(doctor.orElse(null));
+            if (doctor.isEmpty()) throw new IllegalArgumentException("Médico não encontrado.");
+            existingConsultation.setDoctor(doctor.get());
         }
 
         existingConsultation.setUpdated_at(LocalDateTime.now());
-
         consultationRepository.save(existingConsultation);
     }
 
