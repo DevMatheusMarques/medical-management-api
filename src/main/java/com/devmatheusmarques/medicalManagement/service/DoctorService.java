@@ -24,7 +24,7 @@ public class DoctorService {
     @Autowired
     private ModelMapper modelMapper;
 
-    public DoctorResponseDTO doctorRegister(DoctorRequestDTO doctorRequestDTO) {
+    public void doctorRegister(DoctorRequestDTO doctorRequestDTO) {
 
         Doctor doctor = modelMapper.map(doctorRequestDTO, Doctor.class);
 
@@ -50,8 +50,7 @@ public class DoctorService {
 
         doctor.setCreated_at(LocalDateTime.now());
 
-        Doctor savedDoctor = doctorRepository.save(doctor);
-        return modelMapper.map(savedDoctor, DoctorResponseDTO.class);
+        doctorRepository.save(doctor);
     }
 
     public void doctorEdit(Long id, DoctorEditDTO doctorEditDTO) {
@@ -98,11 +97,22 @@ public class DoctorService {
         }
     }
 
+    public DoctorResponseDTO findById(Long id) {
+        try {
+            if (id == null) throw new IllegalArgumentException("CRM inválido ou ausente.");
+
+            Doctor doctor = doctorRepository.findById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("Médico não encontrado"));
+
+            return modelMapper.map(doctor, DoctorResponseDTO.class);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public DoctorResponseDTO findByCrm(String crm) {
         try {
-            if (crm == null || crm.isBlank()) {
-                throw new IllegalArgumentException("CRM inválido ou ausente.");
-            }
+            if (crm == null || crm.isBlank()) throw new IllegalArgumentException("CRM inválido ou ausente.");
             Doctor doctor = doctorRepository.findByCrm(crm)
                     .orElseThrow(() -> new IllegalArgumentException("Médico não encontrado"));
 

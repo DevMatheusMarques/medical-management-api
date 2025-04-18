@@ -1,10 +1,9 @@
 package com.devmatheusmarques.medicalManagement.dto;
 
+import com.devmatheusmarques.medicalManagement.model.Specialty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
-
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,7 +13,7 @@ public class DoctorResponseDTO {
     private Long id;
     private String name;
     private String crm;
-    private String specialty;
+    private Specialty specialty;
     private String email;
     private String telephone;
     private LocalDateTime created_at;
@@ -43,11 +42,11 @@ public class DoctorResponseDTO {
         this.crm = crm;
     }
 
-    public String getSpecialty() {
+    public Specialty getSpecialty() {
         return specialty;
     }
 
-    public void setSpecialty(String specialty) {
+    public void setSpecialty(Specialty specialty) {
         this.specialty = specialty;
     }
 

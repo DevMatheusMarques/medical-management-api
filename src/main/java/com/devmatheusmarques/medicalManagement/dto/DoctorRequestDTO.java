@@ -1,5 +1,6 @@
 package com.devmatheusmarques.medicalManagement.dto;
 
+import com.devmatheusmarques.medicalManagement.model.Specialty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,7 @@ public class DoctorRequestDTO {
     private Long id;
     private String name;
     private String crm;
-    private String specialty;
+    private Specialty specialty;
     private String email;
     private String telephone;
 
@@ -41,11 +42,11 @@ public class DoctorRequestDTO {
         this.crm = crm;
     }
 
-    public String getSpecialty() {
+    public Specialty getSpecialty() {
         return specialty;
     }
 
-    public void setSpecialty(String specialty) {
+    public void setSpecialty(Specialty specialty) {
         this.specialty = specialty;
     }
 

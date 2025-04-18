@@ -22,8 +22,8 @@ public class DoctorController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createDoctor(@Valid @RequestBody DoctorRequestDTO doctorRequestDTO) {
-        DoctorResponseDTO response = doctorService.doctorRegister(doctorRequestDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        doctorService.doctorRegister(doctorRequestDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
 
@@ -39,8 +39,14 @@ public class DoctorController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{crm}")
-    public ResponseEntity<DoctorResponseDTO> getDoctorByCpf(@PathVariable String crm) {
+    @GetMapping("/id/{id}")
+    public ResponseEntity<DoctorResponseDTO> getDoctorById(@PathVariable Long id) {
+        DoctorResponseDTO response = doctorService.findById(id);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/crm/{crm}")
+    public ResponseEntity<DoctorResponseDTO> getDoctorByCrm(@PathVariable String crm) {
         DoctorResponseDTO response = doctorService.findByCrm(crm);
         return ResponseEntity.ok(response);
     }
