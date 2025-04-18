@@ -19,10 +19,18 @@ spring:
 #    show-sql: true
 #    open-in-view: false
 
+#  datasource:
+#    url: jdbc:postgresql://dpg-cvqo5fc9c44c73bikj40-a:5432/medical_management_mf32
+#    username: medical_management_mf32_user
+#    password: KVjcKmp5gKecusBd6pwOTIMQVaZai3zZ
+#    driver-class-name: org.postgresql.Driver
+#    hikari:
+#      connection-timeout: 60000
+
   datasource:
-    url: jdbc:postgresql://dpg-cvqo5fc9c44c73bikj40-a:5432/medical_management_mf32
-    username: medical_management_mf32_user
-    password: KVjcKmp5gKecusBd6pwOTIMQVaZai3zZ
+    url: jdbc:postgresql://localhost:5432/medical_management
+    username: postgres
+    password: root
     driver-class-name: org.postgresql.Driver
     hikari:
       connection-timeout: 60000
