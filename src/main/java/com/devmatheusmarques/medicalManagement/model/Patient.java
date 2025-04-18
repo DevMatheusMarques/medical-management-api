@@ -25,8 +25,10 @@ public class Patient {
     private String email;
     @Column(name = "telephone", nullable = false)
     private String telephone;
-    @Column(name = "address", nullable = false)
-    private String address;
+    @Embedded
+    private Address address;
+    @Column(name = "address_number", nullable = false)
+    private String address_number;
     @Convert(converter = StatusConverter.class)
     @Column(name = "status", nullable = false)
     private Status status;
@@ -38,7 +40,7 @@ public class Patient {
     public Patient() {
     }
 
-    public Patient(Long id, String name, String cpf, Date birth_date, String email, String telephone, String address, Status status, LocalDateTime created_at) {
+    public Patient(Long id, String name, String cpf, Date birth_date, String email, String telephone, Address address, Status status, LocalDateTime created_at) {
         this.id = id;
         this.name = name;
         this.cpf = cpf;
@@ -98,12 +100,20 @@ public class Patient {
         this.telephone = telephone;
     }
 
-    public String getAddress() {
+    public Address getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
+    public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public String getAddress_number() {
+        return address_number;
+    }
+
+    public void setAddress_number(String address_number) {
+        this.address_number = address_number;
     }
 
     public Status getStatus() {
@@ -134,12 +144,12 @@ public class Patient {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Patient patient = (Patient) o;
-        return Objects.equals(id, patient.id) && Objects.equals(name, patient.name) && Objects.equals(cpf, patient.cpf) && Objects.equals(birth_date, patient.birth_date) && Objects.equals(email, patient.email) && Objects.equals(telephone, patient.telephone) && Objects.equals(address, patient.address) && status == patient.status && Objects.equals(created_at, patient.created_at);
+        return Objects.equals(id, patient.id) && Objects.equals(name, patient.name) && Objects.equals(cpf, patient.cpf) && Objects.equals(birth_date, patient.birth_date) && Objects.equals(email, patient.email) && Objects.equals(telephone, patient.telephone) && Objects.equals(address, patient.address) && Objects.equals(address_number, patient.address_number) && status == patient.status && Objects.equals(created_at, patient.created_at) && Objects.equals(updated_at, patient.updated_at);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, cpf, birth_date, email, telephone, address, status, created_at);
+        return Objects.hash(id, name, cpf, birth_date, email, telephone, address, address_number, status, created_at, updated_at);
     }
 
     @Override
@@ -151,9 +161,11 @@ public class Patient {
                 ", birth_date=" + birth_date +
                 ", email='" + email + '\'' +
                 ", telephone='" + telephone + '\'' +
-                ", address='" + address + '\'' +
+                ", address=" + address +
+                ", address_number='" + address_number + '\'' +
                 ", status=" + status +
                 ", created_at=" + created_at +
+                ", updated_at=" + updated_at +
                 '}';
     }
 }

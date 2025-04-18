@@ -1,9 +1,6 @@
 package com.devmatheusmarques.medicalManagement.controller;
 
-import com.devmatheusmarques.medicalManagement.dto.PatientEditDTO;
-import com.devmatheusmarques.medicalManagement.dto.PatientRequestDTO;
-import com.devmatheusmarques.medicalManagement.dto.PatientResponseDTO;
-import com.devmatheusmarques.medicalManagement.model.Patient;
+import com.devmatheusmarques.medicalManagement.dto.*;
 import com.devmatheusmarques.medicalManagement.service.PatientService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +20,12 @@ public class PatientController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PatientResponseDTO> createPatient(@Valid @RequestBody PatientRequestDTO patientRequestDTO) {
-        PatientResponseDTO response = patientService.patientRegister(patientRequestDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        if (patientRequestDTO.getAddress() == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        patientService.patientRegister(patientRequestDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
 

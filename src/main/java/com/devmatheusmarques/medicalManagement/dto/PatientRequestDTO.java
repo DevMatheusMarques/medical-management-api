@@ -18,7 +18,8 @@ public class PatientRequestDTO {
     private Date birth_date;
     private String email;
     private String telephone;
-    private String address;
+    private AddressRequestDTO address;
+    private String address_number;
     private Status status;
 
     public Long getId() {
@@ -69,12 +70,20 @@ public class PatientRequestDTO {
         this.telephone = telephone;
     }
 
-    public String getAddress() {
+    public AddressRequestDTO getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
+    public void setAddress(AddressRequestDTO address) {
         this.address = address;
+    }
+
+    public String getAddress_number() {
+        return address_number;
+    }
+
+    public void setAddress_number(String address_number) {
+        this.address_number = address_number;
     }
 
     public Status getStatus() {
@@ -85,29 +94,4 @@ public class PatientRequestDTO {
         this.status = status;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        PatientRequestDTO that = (PatientRequestDTO) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(cpf, that.cpf) && Objects.equals(birth_date, that.birth_date) && Objects.equals(email, that.email) && Objects.equals(telephone, that.telephone) && Objects.equals(address, that.address) && Objects.equals(status, that.status);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, cpf, birth_date, email, telephone, address, status);
-    }
-
-    @Override
-    public String toString() {
-        return "PatientRequestDTO{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", cpf='" + cpf + '\'' +
-                ", birth_date=" + birth_date +
-                ", email='" + email + '\'' +
-                ", telephone='" + telephone + '\'' +
-                ", address='" + address + '\'' +
-                ", status='" + status + '\'' +
-                '}';
-    }
 }
