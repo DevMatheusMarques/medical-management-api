@@ -1,4 +1,4 @@
 package com.devmatheusmarques.medicalManagement.dto;
 
-public record LoginResponseDTO(String token) {
+public record LoginResponseDTO(String token, String refreshToken) {
 }

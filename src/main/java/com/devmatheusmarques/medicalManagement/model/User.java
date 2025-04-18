@@ -34,16 +34,19 @@ public class User implements UserDetails {
     @Convert(converter = StatusConverter.class)
     @Column(name = "status", nullable = false)
     private Status status;
+    @Column(name = "refresh_token")
+    private String refreshToken;
     @Column(name = "created_at", nullable = false)
     private LocalDateTime created_at;
     @Column(name = "updated_at")
     private LocalDateTime updated_at;
 
-    public User(String login, String password, UserRole role, Status status , LocalDateTime created_at) {
+    public User(String login, String password, UserRole role, Status status, LocalDateTime created_at) {
         this.login = login;
         this.password = password;
         this.role = role;
         this.status = status;
+        this.refreshToken = null;
         this.created_at = created_at;
     }
 
@@ -84,6 +87,14 @@ public class User implements UserDetails {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 
     public LocalDateTime getCreated_at() {
