@@ -3,6 +3,7 @@ package com.devmatheusmarques.medicalManagement.service;
 import com.devmatheusmarques.medicalManagement.dto.SpecialtyRequestDTO;
 import com.devmatheusmarques.medicalManagement.dto.SpecialtyResponseDTO;
 import com.devmatheusmarques.medicalManagement.model.Specialty;
+import com.devmatheusmarques.medicalManagement.repository.DoctorRepository;
 import com.devmatheusmarques.medicalManagement.repository.SpecialtyRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,8 @@ public class SpecialtyService {
     private SpecialtyRepository specialtyRepository;
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private DoctorRepository doctorRepository;
 
     public void specialtyRegister(SpecialtyRequestDTO specialtyRequestDTO) {
 
@@ -40,35 +43,33 @@ public class SpecialtyService {
             existingSpecialty.setName(specialtyRequestDTO.getName());
         }
 
+        boolean hasDoctors = doctorRepository.existsBySpecialty(existingSpecialty);
+        if (hasDoctors) {
+            throw new IllegalStateException("Não é possível editar a especialidade pois existem médicos vinculados a ela.");
+        }
+
         existingSpecialty.setUpdated_at(LocalDateTime.now());
 
         specialtyRepository.save(existingSpecialty);
     }
 
     public void specialtyDelete(Long id) {
-        try {
-            Specialty existingSpecialty = specialtyRepository.findById(id)
-                    .orElseThrow(() -> new IllegalArgumentException("Especialidade não encontrada."));
+        Specialty existingSpecialty = specialtyRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Especialidade não encontrada."));
 
-            specialtyRepository.delete(existingSpecialty);
-
-        } catch (IllegalArgumentException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new RuntimeException("Erro ao excluir especialidade: " + e.getMessage(), e);
+        boolean hasDoctors = doctorRepository.existsBySpecialty(existingSpecialty);
+        if (hasDoctors) {
+            throw new IllegalStateException("Não é possível excluir a especialidade pois existem médicos vinculados a ela.");
         }
+
+        specialtyRepository.delete(existingSpecialty);
     }
 
     public List<SpecialtyResponseDTO> findAll() {
-        try {
-            List<Specialty> specialtys = specialtyRepository.findAll();
+        List<Specialty> specialtys = specialtyRepository.findAll();
 
-            return specialtys.stream()
-                    .map(specialty -> modelMapper.map(specialty, SpecialtyResponseDTO.class))
-                    .collect(Collectors.toList());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
+        return specialtys.stream()
+                .map(specialty -> modelMapper.map(specialty, SpecialtyResponseDTO.class))
+                .collect(Collectors.toList());
     }
 }
