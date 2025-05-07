@@ -162,7 +162,7 @@ public class PatientService {
         } catch (IllegalArgumentException e) {
             throw e;
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao excluir paciente: " + e.getMessage(), e);
+            throw new RuntimeException("Erro ao excluir paciente");
         }
     }
 

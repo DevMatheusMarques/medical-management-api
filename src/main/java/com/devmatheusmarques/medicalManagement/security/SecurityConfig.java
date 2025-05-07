@@ -52,7 +52,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         try {
             CorsConfiguration configuration = new CorsConfiguration();
-            configuration.setAllowCredentials(true);
+            configuration.setAllowCredentials(false);
             configuration.addAllowedOriginPattern("*");
             configuration.addAllowedMethod("*");
             configuration.addAllowedHeader("*");

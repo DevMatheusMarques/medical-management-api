@@ -43,15 +43,28 @@ public class ConsultationService {
             throw new IllegalArgumentException("Médico não encontrado.");
         }
 
-        boolean exists = consultationRepository.findByDoctorAndDateTime(
+        LocalDateTime consultationDateTime = LocalDateTime.of(
+                consultationRequestDTO.getDate(),
+                consultationRequestDTO.getTime()
+        );
+
+        if (consultationDateTime.isBefore(LocalDateTime.now())) throw new IllegalArgumentException("Não é possível agendar uma consulta no passado.");
+
+        boolean existsDoctorConsultation = consultationRepository.findByDoctorAndDateTime(
                 consultationRequestDTO.getDoctor().getId(),
                 consultationRequestDTO.getDate(),
                 consultationRequestDTO.getTime()
         ).isPresent();
 
-        if (exists) {
-            throw new IllegalArgumentException("O médico já possui uma consulta marcada nesse dia e horário.");
-        }
+        if (existsDoctorConsultation) throw new IllegalArgumentException("O médico já possui uma consulta marcada nesse dia e horário.");
+
+        boolean existsPatientConsultation = consultationRepository.findByPatientAndDateTime(
+                consultationRequestDTO.getPatient().getId(),
+                consultationRequestDTO.getDate(),
+                consultationRequestDTO.getTime()
+        ).isPresent();
+
+        if (existsPatientConsultation) throw new IllegalArgumentException("O paciente já possui uma consulta marcada nesse dia e horário.");
 
         Consultation consultation = modelMapper.map(consultationRequestDTO, Consultation.class);
         consultation.setCreated_at(LocalDateTime.now());
@@ -77,12 +90,22 @@ public class ConsultationService {
                 .orElseThrow(() -> new IllegalArgumentException("Consulta não encontrada."));
 
         Long doctorId = consultationEditDTO.getDoctor() != null ? consultationEditDTO.getDoctor().getId() : existingConsultation.getDoctor().getId();
+        Long patientId = consultationEditDTO.getPatient() != null ? consultationEditDTO.getPatient().getId() : existingConsultation.getPatient().getId();
         LocalDate date = consultationEditDTO.getDate() != null ? consultationEditDTO.getDate() : existingConsultation.getDate();
         LocalTime time = consultationEditDTO.getTime() != null ? consultationEditDTO.getTime() : existingConsultation.getTime();
 
-        Optional<Consultation> conflict = consultationRepository.findByDoctorAndDateTime(doctorId, date, time);
-        if (conflict.isPresent() && !conflict.get().getId().equals(id)) {
+        LocalDateTime consultationDateTime = LocalDateTime.of(date, time);
+
+        if (consultationDateTime.isBefore(LocalDateTime.now())) throw new IllegalArgumentException("Não é possível agendar uma consulta no passado.");
+
+        Optional<Consultation> conflictDoctor = consultationRepository.findByDoctorAndDateTime(doctorId, date, time);
+        if (conflictDoctor.isPresent() && !conflictDoctor.get().getId().equals(id)) {
             throw new IllegalArgumentException("O médico já possui uma consulta nesse dia e horário.");
+        }
+
+        Optional<Consultation> conflictPatient = consultationRepository.findByPatientAndDateTime(patientId, date, time);
+        if (conflictPatient.isPresent() && !conflictPatient.get().getId().equals(id)) {
+            throw new IllegalArgumentException("O paciente já possui uma consulta nesse dia e horário.");
         }
 
         if (consultationEditDTO.getDate() != null) existingConsultation.setDate(date);
@@ -116,7 +139,7 @@ public class ConsultationService {
         } catch (IllegalArgumentException e) {
             throw e;
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao excluir paciente: " + e.getMessage(), e);
+            throw new RuntimeException("Erro ao excluir consulta");
         }
     }
 
@@ -142,86 +165,4 @@ public class ConsultationService {
             throw new RuntimeException(e);
         }
     }
-
-    public List<Consultation> getConsultationsPerPeriod(LocalDate start, LocalDate end) {
-        try {
-            LocalTime startTime = LocalTime.MIN;
-            LocalTime endTime = LocalTime.MAX;
-
-            return consultationRepository.findByDateAndTimeBetween(
-                    java.sql.Date.valueOf(start),
-
-                    startTime,
-                    endTime
-            );
-        } catch (RuntimeException e) {
-            throw new RuntimeException("Erro ao buscar consultas no período.", e);
-        }
-    }
-
-    public List<Patient> getPatientsPerDoctor(Long idDoctor) {
-        List<Consultation> consultations = consultationRepository.findByDoctorId(idDoctor);
-        return consultations.stream()
-                .map(Consultation::getPatient)
-                .distinct()
-                .collect(Collectors.toList());
-    }
-
-    public String generateReportQueriesCSV(List<Consultation> consultations) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("ID, Paciente, Médico, Data, Status, Observações\n");
-
-        for (Consultation consulta : consultations) {
-            sb.append(consulta.getId()).append(", ");
-            sb.append(consulta.getPatient().getName()).append(", ");
-            sb.append(consulta.getDoctor().getName()).append(", ");
-            sb.append(consulta.getDate()).append(", ");
-            sb.append(consulta.getTime()).append(", ");
-            sb.append(consulta.getStatus()).append(", ");
-            sb.append(consulta.getObservations()).append("\n");
-        }
-        return sb.toString();
-    }
-
-//    public byte[] generateReportConsultationsPDF(List<Consultation> consultations) {
-//        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-//            PdfWriter writer = new PdfWriter(outputStream);
-//            PdfDocument pdf = new PdfDocument(writer);
-//            Document document = new Document(pdf);
-//
-//            // Adiciona um título ao documento
-//            document.add(new Paragraph("Relatório de Consultas").setBold().setFontSize(16));
-//
-//            // Criar tabela com cabeçalhos
-//            float[] columnWidths = {50f, 150f, 150f, 100f, 100f, 200f};
-//            Table table = new Table(columnWidths);
-//            table.addHeaderCell(new Cell().add(new Paragraph("ID")));
-//            table.addHeaderCell(new Cell().add(new Paragraph("Paciente")));
-//            table.addHeaderCell(new Cell().add(new Paragraph("Médico")));
-//            table.addHeaderCell(new Cell().add(new Paragraph("Data")));
-//            table.addHeaderCell(new Cell().add(new Paragraph("Horário")));
-//            table.addHeaderCell(new Cell().add(new Paragraph("Status")));
-//            table.addHeaderCell(new Cell().add(new Paragraph("Observações")));
-//
-//            // Preenchendo a tabela com os dados das consultations
-//            for (Consultation consultation : consultations) {
-//                table.addCell(new Cell().add(new Paragraph(String.valueOf(consultation.getId()))));
-//                table.addCell(new Cell().add(new Paragraph(consultation.getPatient().getName())));
-//                table.addCell(new Cell().add(new Paragraph(consultation.getDoctor().getName())));
-//                table.addCell(new Cell().add(new Paragraph(consultation.getDate().toString())));
-//                table.addCell(new Cell().add(new Paragraph(consultation.getTime().toString())));
-//                table.addCell(new Cell().add(new Paragraph(String.valueOf(consultation.getStatus()))));
-//                table.addCell(new Cell().add(new Paragraph(consultation.getObservations() != null ? consultation.getObservations() : "-")));
-//            }
-//
-//            // Adicionando a tabela ao documento
-//            document.add(table);
-//            document.close();
-//
-//            return outputStream.toByteArray(); // Retorna o PDF como um array de bytes
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
 }
