@@ -18,10 +18,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ConsultationRepository extends JpaRepository<Consultation, Long> {
-    List<Consultation> findByDateAndTimeBetween(
-            Date date, LocalTime time, LocalTime time2);
-
-    List<Consultation> findByDoctorId(Long doctorId);
 
     @Query(value = "SELECT COUNT(*) AS count, EXTRACT(MONTH FROM c.created_at) AS month " +
             "FROM consultations c " +
@@ -104,6 +100,13 @@ public interface ConsultationRepository extends JpaRepository<Consultation, Long
     @Query(value = "SELECT * FROM consultations WHERE doctor_id = :doctorId AND date = :date AND time = :time", nativeQuery = true)
     Optional<Consultation> findByDoctorAndDateTime(
             @Param("doctorId") Long doctorId,
+            @Param("date") LocalDate date,
+            @Param("time") LocalTime time
+    );
+
+    @Query(value = "SELECT * FROM consultations WHERE patient_id = :patientId AND date = :date AND time = :time", nativeQuery = true)
+    Optional<Consultation> findByPatientAndDateTime(
+            @Param("patientId") Long patientId,
             @Param("date") LocalDate date,
             @Param("time") LocalTime time
     );
