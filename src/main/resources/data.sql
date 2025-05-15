@@ -75,15 +75,15 @@ INSERT INTO consultations (
     created_at, date, observations, status, time, updated_at, doctor_id, patient_id
 ) VALUES
       ('2025-04-23 05:24:45.303242', '2025-06-23', 'Retorno pós-operatório', 'Pendente', '10:30:00', now(), 1, 8),
-      ('2025-04-23 05:25:12.303242', '2025-06-24', 'Consulta de rotina', 'Confirmada', '14:00:00', now(), 2, 7),
+      ('2025-04-23 05:25:12.303242', '2025-06-24', 'Consulta de rotina', 'Finalizada', '14:00:00', now(), 2, 7),
       ('2025-04-23 05:25:44.303242', '2025-06-25', 'Dor abdominal persistente', 'Pendente', '09:00:00', now(), 3, 6),
       ('2025-04-23 05:26:15.303242', '2025-06-26', 'Exames pré-operatórios', 'Cancelada', '16:30:00', now(), 4, 4),
       ('2025-04-23 05:26:45.303242', '2025-06-27', 'Primeira consulta', 'Pendente', '08:15:00', now(), 5, 5),
-      ('2025-04-23 05:27:10.303242', '2025-06-28', 'Retorno com exames', 'Confirmada', '11:45:00', now(), 6, 9),
+      ('2025-04-23 05:27:10.303242', '2025-06-28', 'Retorno com exames', 'Finalizada', '11:45:00', now(), 6, 9),
       ('2025-04-23 05:27:40.303242', '2025-06-29', 'Consulta dermatológica', 'Pendente', '15:00:00', now(), 7, 10),
-      ('2025-04-23 05:28:08.303242', '2025-06-30', 'Revisão anual', 'Confirmada', '13:30:00', now(), 8, 2),
+      ('2025-04-23 05:28:08.303242', '2025-06-30', 'Revisão anual', 'Finalizada', '13:30:00', now(), 8, 2),
       ('2025-04-23 05:28:38.303242', '2025-07-01', 'Acompanhamento hipertensão', 'Pendente', '10:00:00', now(), 9, 1),
-      ('2025-04-23 05:29:02.303242', '2025-07-02', 'Consulta de avaliação geral', 'Confirmada', '09:30:00', now(), 10, 3);
+      ('2025-04-23 05:29:02.303242', '2025-07-02', 'Consulta de avaliação geral', 'Finalizada', '09:30:00', now(), 10, 3);
 
 
 
